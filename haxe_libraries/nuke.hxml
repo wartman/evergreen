@@ -1,0 +1,2 @@
+-cp ../nuke/src
+-D nuke=0.0.1

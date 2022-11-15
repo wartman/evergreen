@@ -29,7 +29,7 @@ class Layer extends ImmutableComponent {
       render: layer -> new Isolate({
         wrap: _ -> {
           var status = layer.status;
-          var body = new Box({
+          var body = new DynamicComponent({
             styles: [
               'eg-layer',
               styles

@@ -4,7 +4,7 @@ import pine.*;
 
 typedef PortalContextProvider = pine.Provider<PortalContext>;
 
-class PortalContext {
+class PortalContext implements Disposable {
   public static function from(context:Context):PortalContext {
     return switch PortalContextProvider.maybeFrom(context) {
       case Some(portal): portal;
@@ -26,4 +26,6 @@ class PortalContext {
   public function getTarget() {
     return target;
   }
+
+  public function dispose() {}
 }

@@ -9,18 +9,18 @@ import pine.html.TagTypes.getTypeForTag;
 using Nuke;
 using Reflect;
 
-typedef BoxProps = {
-  ?tag:BoxTag,
+typedef DynamicComponentProps = {
+  ?tag:DynamicComponentTag,
   ?styles:ClassName,
   ?children:HtmlChildren,
   ?key:Key,
 } & AriaAttributes & GlobalAttr & HtmlEvents;
 
-class Box extends HtmlElementComponent<GlobalAttr & HtmlEvents> {
+class DynamicComponent extends HtmlElementComponent<GlobalAttr & HtmlEvents> {
   final type:UniqueId;
 
-  public function new(props:BoxProps) {
-    var tag:BoxTag = props.tag == null ? Div : props.tag;
+  public function new(props:DynamicComponentProps) {
+    var tag:DynamicComponentTag = props.tag == null ? Div : props.tag;
     var children = props.children == null ? [] : props.children;
     var key = props.key;
 
@@ -46,7 +46,7 @@ class Box extends HtmlElementComponent<GlobalAttr & HtmlEvents> {
   }
 }
 
-enum abstract BoxTag(String) to String {
+enum abstract DynamicComponentTag(String) to String {
   // final Html = 'html';
   // final Body = 'body';
   // final Iframe = 'iframe';

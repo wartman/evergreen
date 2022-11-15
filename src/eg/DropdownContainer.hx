@@ -51,12 +51,11 @@ class DropdownContainerElement extends HookElement {
 
   function syncClicksWithActiveElement(event:js.html.Event) {
     var target = event.target.as(js.html.Element);
-    switch getMenu() {
-      case Some(el): switch el.queryFirstChild(child -> child.getObject() == target) {
-        case Some(el):
-          current = el;
-        case None:
-      }
+    var menu = getMenu();
+
+    switch menu.queryFirstChild(child -> child.getObject() == target) {
+      case Some(el):
+        current = el;
       case None:
     }
   }
@@ -88,7 +87,7 @@ class DropdownContainerElement extends HookElement {
 
   function maybeFocusFirst() {
     switch getNextFocusedChild(1) {
-      case Some(item): 
+      case Some(item):
         var el = item.getObject().as(js.html.Element);
         FocusContext.from(this).focus(el);
       case None:
@@ -120,19 +119,16 @@ class DropdownContainerElement extends HookElement {
   var current:Null<Element> = null;
 
   function getNextFocusedChild(offset:Int):Option<Element> {
-    switch getMenu() {
-      case Some(menu): switch menu.queryChildren(child -> {
-        return child.getComponent().getComponentType() == DropdownItem.componentType;
-      }) {
-        case Some(items):
-          var index = Math.ceil(items.indexOf(current) + offset);
-          var item = items[index];
-          if (item != null) {
-            current = item;
-            return Some(current);
-          }
-        case None:
-      }
+    var menu = getMenu();
+    
+    switch menu.queryChildrenOfComponentType(DropdownItem) {
+      case Some(items):
+        var index = Math.ceil(items.indexOf(current) + offset);
+        var item = items[index];
+        if (item != null) {
+          current = item;
+          return Some(current);
+        }
       case None:
     }
 
@@ -142,19 +138,15 @@ class DropdownContainerElement extends HookElement {
   // @todo:
   // The way Portals work breaks a lot of stuff, as `visitChildren` will
   // return their placeholder children, not the actual content. We 
-  // should consider a way to change this so we don't need wacky
+  // should consider a way to change this so we don't need
   // stuff like the following method.
-  function getMenu():Option<Element> {
-    var query = (target:Element) -> target
-      .queryFirstChild(el -> el.getComponent().getComponentType() == DropdownItem.componentType);
-    
-    return switch queryFirstChild(child -> child is PortalElement) {
-      case Some(portal): switch portal.as(PortalElement).getPortalRoot() {
-        case Some(el): query(el);
-        default: query(this);
+  function getMenu():Element {
+    return switch queryFirstChildOfType(PortalElement) {
+      case Some(portal): switch portal.getPortalRoot() {
+        case Some(el): el;
+        default: this;
       }
-      default:
-        query(this);
+      default: this;
     }
   }
   #end

@@ -1,4 +1,4 @@
-package spruce.dropdown;
+package eg;
 
 import pine.*;
 import pine.html.*;
@@ -6,8 +6,8 @@ import eg.DropdownContext;
 
 using Nuke;
 
-class DropdownButton extends ImmutableComponent {
-  @prop public final attachment:PositionedAttachment = { h: Middle, v: Bottom };
+class Dropdown extends ImmutableComponent {
+  @prop final attachment:PositionedAttachment = { h: Middle, v: Bottom };
   @prop final styles:ClassName = null;
   @prop final label:HtmlChild;
   @prop final child:HtmlChild;
@@ -17,9 +17,12 @@ class DropdownButton extends ImmutableComponent {
     return new DropdownContextProvider({
       create: () -> new DropdownContext({ status: status, attachment: attachment }),
       dispose: dropdown -> dropdown.dispose(),
-      render: dropdown -> new Box({
-        styles: styles,
-        onclick: _ -> dropdown.toggle(),
+      render: dropdown -> new Html<'button'>({
+        className: styles,
+        onclick: e -> {
+          e.preventDefault();
+          dropdown.toggle();
+        },
         children: [
           label,
           new Isolate({
@@ -30,7 +33,7 @@ class DropdownButton extends ImmutableComponent {
                   child: new Popover({
                     attachment: attachment,
                     child: child
-                  }) 
+                  })
                 });
               case Closed: 
                 null;

@@ -24,7 +24,7 @@ class Modal extends ImmutableComponent {
           unlockBody();
           onHide();
         },
-        child: new Box({
+        child: new DynamicComponent({
           styles: [
             'eg-modal-container',
             styles

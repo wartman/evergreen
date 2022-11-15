@@ -1,6 +1,7 @@
 package eg;
 
 import pine.*;
+import eg.Layer;
 
 using Nuke;
 using pine.Cast;

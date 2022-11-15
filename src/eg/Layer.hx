@@ -29,11 +29,22 @@ class Layer extends ImmutableComponent {
       render: layer -> new Isolate({
         wrap: _ -> {
           var status = layer.status;
-          var body = new DynamicComponent({
-            styles: [
+          var body = new Html<'div'>({
+            className: ClassName.ofArray([
               'eg-layer',
-              styles
-            ],
+              styles,
+              // Note: We *do* actually want to define a few 
+              // styles here, as this is just how Layers work.
+              Css.atoms({
+                position: 'fixed',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                overflowX: 'hidden',
+                overflowY: 'scroll',
+              })
+            ]),
             onclick: e -> if (hideOnClick) {
               e.preventDefault();
               layer.hide();
@@ -65,5 +76,17 @@ class Layer extends ImmutableComponent {
         }
       })
     });
+  }
+}
+
+class LayerTarget extends ImmutableComponent {
+  public static function maybeFrom(context:Context) {
+    return context.queryFirstChildOfComponentType(LayerTarget);
+  }
+  
+  @prop final child:Component;
+
+  function render(context:Context) {
+    return child;
   }
 }

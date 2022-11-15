@@ -8,6 +8,7 @@ using Nuke;
 
 class Modal extends ImmutableComponent {
   @prop final styles:ClassName = null;
+  @prop final layerStyles:ClassName = null;
   @prop final onHide:()->Void;
   @prop final children:HtmlChildren;
   @prop final hideOnEscape:Bool = true;
@@ -16,6 +17,7 @@ class Modal extends ImmutableComponent {
     return new Portal({
       target: PortalContext.from(context).getTarget(),
       child: new Layer({
+        styles: layerStyles,
         hideOnEscape: hideOnEscape,
         beforeShow: () -> {
           lockBody();
@@ -24,11 +26,11 @@ class Modal extends ImmutableComponent {
           unlockBody();
           onHide();
         },
-        child: new DynamicComponent({
-          styles: [
+        child: new Html<'div'>({
+          className: ClassName.ofArray([
             'eg-modal-container',
             styles
-          ],
+          ]),
           onclick: e -> e.stopPropagation(),
           ariaModal: 'true',
           tabIndex: -1,

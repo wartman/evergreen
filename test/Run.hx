@@ -11,7 +11,8 @@ function main() {
     dispose: portal -> portal.dispose(),
     render: portal -> new Html<'div'>({
       children: [
-        new DropdownExample({})
+        new DropdownExample({}),
+        new ModalExample({})
       ]
     })
   }));

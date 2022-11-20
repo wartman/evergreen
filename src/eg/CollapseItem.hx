@@ -9,7 +9,7 @@ class CollapseItem extends ObserverComponent {
   @prop final child:HtmlChild;
  
   function render(context:Context) {
-    Debug.assert(!(context is Fragment));
+    Debug.assert(!(child is Fragment));
 
     var collapse = CollapseContext.from(context);
 

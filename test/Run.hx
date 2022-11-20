@@ -12,7 +12,8 @@ function main() {
     render: portal -> new Html<'div'>({
       children: [
         new DropdownExample({}),
-        new ModalExample({})
+        new ModalExample({}),
+        new CollapseExample({})
       ]
     })
   }));

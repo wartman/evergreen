@@ -6,4 +6,7 @@
 
 -main Run
 
+-D debug
+-D js-es=6
+
 -js dist/test.js

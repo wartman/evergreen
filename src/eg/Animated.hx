@@ -13,6 +13,8 @@ class Animated extends HookComponent {
   @prop public final dontAnimateInitial:Bool = false;
   @prop public final createKeyframes:KeyframeFactory;
   @prop public final duration:Int;
+  @prop public final infinite:Bool = false;
+  @prop public final easing:String = 'linear';
   @prop public final onFinished:(context:Context)->Void = null;
   @prop public final onDispose:(context:Context)->Void = null;
 
@@ -51,7 +53,11 @@ class AnimatedElement extends HookElement {
     var duration = first && animated.dontAnimateInitial ? 0 : animated.duration;
     var keyframes = animated.createKeyframes(this);
 
-    currentAnimation = el.registerAnimations(keyframes, duration, onFinished);
+    currentAnimation = el.registerAnimations(keyframes, {
+      duration: duration,
+      easing: animated.easing,
+      iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
+    }, onFinished);
   }
 
   function onFinished() {

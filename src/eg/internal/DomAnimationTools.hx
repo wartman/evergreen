@@ -3,13 +3,24 @@ package eg.internal;
 import js.Browser.window;
 import js.html.Element;
 import js.html.Animation;
+import js.html.KeyframeAnimationOptions;
 import js.lib.Promise;
 
 using Reflect;
 
-function registerAnimations(el:Element, keyframes:Array<Dynamic>, duration:Int, onFinished:()->Void):Animation {
-  var duration = prefersReducedMotion() ? 0 : duration;
-  var animation = el.animate(keyframes, { duration: duration });
+typedef AnimationOptions = {
+  public final duration:Int;
+  public final ?easing:String;
+  public final ?iterations:Float;
+}
+
+function registerAnimations(el:Element, keyframes:Array<Dynamic>, options:AnimationOptions, onFinished:()->Void):Animation {
+  var duration = prefersReducedMotion() ? 0 : options.duration;
+  var animation = el.animate(keyframes, { 
+    duration: duration,
+    easing: options.easing,
+    iterations: options.iterations
+  });
   
   // @todo: I don't think we want to trigger finished if we're canceling.
   // animation.addEventListener('cancel', onFinished, { once: true });

@@ -36,7 +36,7 @@ class ExampleCollapseHeader extends ImmutableComponent {
         // `collapse.status` is a State, so we can observe it
         // for changes. In a real implementation, this might be
         // where you have a chevron icon rotate or otherwise
-        // indicate an opened status.
+        // indicate a collapsed/expanded status.
         wrap: _ -> switch collapse.status {
           case Collapsed: new Fragment({ children: [ child, (' +':HtmlChild) ] });
           case Expanded: new Fragment({ children: [ child, (' -':HtmlChild) ] });

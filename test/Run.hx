@@ -13,7 +13,8 @@ function main() {
       children: [
         new DropdownExample({}),
         new ModalExample({}),
-        new CollapseExample({})
+        new CollapseExample({}),
+        new AnimatedExample({})
       ]
     })
   }));

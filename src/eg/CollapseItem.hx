@@ -12,7 +12,7 @@ class CollapseItem extends ObserverComponent {
     Debug.assert(!(child is Fragment));
 
     var collapse = CollapseContext.from(context);
-
+ 
     return new Animated({
       dontAnimateInitial: true,
       createKeyframes: switch collapse.status {

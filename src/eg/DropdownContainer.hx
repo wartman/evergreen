@@ -50,6 +50,8 @@ class DropdownContainerElement extends HookElement {
   }
 
   function syncClicksWithActiveElement(event:js.html.Event) {
+    if (status != Valid) return;
+
     var target = event.target.as(js.html.Element);
     var menu = getMenu();
 

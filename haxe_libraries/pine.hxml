@@ -1,3 +1,4 @@
 # @install: lix --silent download "gh://github.com/wartman/pine#ff40ccadc53f232de0a69dc450d4b727d03dcd37" into pine/0.0.0/github/ff40ccadc53f232de0a69dc450d4b727d03dcd37
--cp ${HAXE_LIBCACHE}/pine/0.0.0/github/ff40ccadc53f232de0a69dc450d4b727d03dcd37/src
+# -cp ${HAXE_LIBCACHE}/pine/0.0.0/github/ff40ccadc53f232de0a69dc450d4b727d03dcd37/src
+-cp ../pine-ui/refactor
 -D pine=0.0.0

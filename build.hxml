@@ -1,5 +1,5 @@
--cp src
--cp test
+-cp refactor
+-cp refactor-test
 
 -lib pine
 -lib nuke

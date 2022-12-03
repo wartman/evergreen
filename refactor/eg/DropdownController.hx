@@ -7,14 +7,12 @@ using pine.core.OptionTools;
 
 // @todo: I don't think this is getting positioned right.
 @:access(pine)
-class DropdownController implements Controller<DropdownContainer> {
-  var el:Option<ElementOf<DropdownContainer>> = None;
+class DropdownController {
+  final element:ElementOf<DropdownContainer>;
 
-  public function new() {}
-
-  public function register(element:ElementOf<DropdownContainer>) {
-    el = Some(element);
-    element.addHook({
+  public function new(element) {
+    this.element = element;
+    element.addLifecycle({
       afterInit: element -> {
         var el:js.html.Element = element.getObject();
 
@@ -36,27 +34,13 @@ class DropdownController implements Controller<DropdownContainer> {
     });
   }
 
-  public function dispose() {
-    el = None;
-  }
-
   function hide(e:js.html.Event) {
-    var element = switch el {
-      case Some(el): el;
-      case None: return;
-    }
-
     e.stopPropagation();
     e.preventDefault();
     element.getComponent().onHide();
   }
 
   function onKeyDown(event:js.html.KeyboardEvent) {
-    var element = switch el {
-      case Some(el): el;
-      case None: return;
-    }
-
     if (element.status == Building || element.status == Disposed) return;
 
     switch event.key {
@@ -77,11 +61,6 @@ class DropdownController implements Controller<DropdownContainer> {
   }
 
   function maybeFocusFirst() {
-    var element = switch el {
-      case Some(el): el;
-      case None: return;
-    }
-
     switch getNextFocusedChild(1) {
       case Some(item):
         var el:js.html.Element = item.getObject();
@@ -115,11 +94,7 @@ class DropdownController implements Controller<DropdownContainer> {
   var current:Null<Element> = null;
 
   function getNextFocusedChild(offset:Int):Option<Element> {
-    var menu = switch el {
-      case Some(el): el;
-      case None: return None;
-    }
-    var items = menu.queryChildren().filterOfType(DropdownItem, true);
+    var items = element.queryChildren().filterOfType(DropdownItem, true);
     var index = Math.ceil(items.indexOf(current) + offset);
     var item = items[index];
     if (item != null) {

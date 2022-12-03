@@ -5,7 +5,7 @@ import pine.*;
 import pine.html.*;
 
 #if (js && !nodejs)
-@:controller(new DropdownController())
+@:hook(element -> new DropdownController(element))
 #end
 class DropdownContainer extends AutoComponent {
   @:prop public final onHide:()->Void;

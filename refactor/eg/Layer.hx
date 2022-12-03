@@ -77,10 +77,6 @@ class Layer extends AutoComponent {
 }
 
 class LayerTarget extends AutoComponent {
-  public static function maybeFrom(context:Context) {
-    return context.queryChildren().findOfType(LayerTarget, true);
-  }
-  
   @:prop final child:Component;
 
   function render(context:Context) {

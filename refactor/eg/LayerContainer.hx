@@ -8,13 +8,14 @@ using Nuke;
 using pine.core.OptionTools;
 
 #if (js && !nodejs)
-@:controller(
-  new FocusController(element -> LayerTarget
-    .maybeFrom(element)
+@:hook(
+  CoreHooks.takeFocus(element -> element
+    .queryChildren()
+    .findOfType(LayerTarget, true)
     .orThrow('Expected a LayerTarget')
     .getObject()
   ),
-  new KeyboardController<LayerContainer>((e, element) -> switch e.key {
+  CoreHooks.watchKeypressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
     case 'Escape' if (element.getComponent().hideOnEscape):
       e.preventDefault();
       LayerContext.from(element).hide();

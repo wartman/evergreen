@@ -5,13 +5,11 @@ import pine.*;
 
 using pine.core.OptionTools;
 
-class PositionController implements Controller<Positioned> {
-  var el:Option<ElementOf<Positioned>> = None;
+class PositionController  {
+  final element:ElementOf<Positioned>;
 
-  public function new() {}
-
-  public function register(element:ElementOf<Positioned>) {
-    el = Some(element);
+  public function new(element) {
+    this.element = element;
     element.onReady(_ -> init());
   }
 
@@ -27,20 +25,12 @@ class PositionController implements Controller<Positioned> {
   }
 
   function setupElement() {
-    var element = switch el {
-      case Some(el): el;
-      case None: return;
-    }
     var el:js.html.Element = element.getObject();
     el.style.position = 'fixed';
     el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
   }
 
   function positionElement() {
-    var element = switch el {
-      case Some(el): el;
-      case None: return;
-    }
     var positioned = element.getComponent();
     var el:js.html.Element = element.getObject();
     var target:js.html.Element = positioned.getTarget();

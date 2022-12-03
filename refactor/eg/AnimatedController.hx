@@ -6,13 +6,13 @@ import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
 
-class AnimatedLifecycleController implements Controller<Animated> {
+class AnimatedController {
   var currentAnimation:Null<Animation> = null;
+  final element:ElementOf<Animated>;
 
-  public function new() {}
-
-	public function register(element:ElementOf<Animated>) {
-    element.addHook({
+  public function new(element) {
+    this.element = element;
+    element.addLifecycle({
       afterInit: init,
       afterUpdate: update,
       // shouldUpdate: (element, current, incoming, isRebuild) -> {

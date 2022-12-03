@@ -4,6 +4,8 @@ import pine.*;
 import pine.html.*;
 import eg.CollapseContext;
 
+using pine.core.OptionTools;
+
 class Collapse extends AutoComponent {
   @:prop final child:HtmlChild;
   @:prop final duration:Int = 200;
@@ -15,17 +17,15 @@ class Collapse extends AutoComponent {
           status: Collapsed,
           duration: duration
         });
-        switch AccordianContext.maybeFrom(context) {
-          case Some(accordian): accordian.add(collapse);
-          case None:
-        }
+        AccordianContext
+          .maybeFrom(context)
+          .some(accordian -> accordian.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
-        switch AccordianContext.maybeFrom(context) {
-          case Some(accordian): accordian.remove(collapse);
-          case None:
-        }
+        AccordianContext
+          .maybeFrom(context)
+          .some(accordian -> accordian.remove(collapse));
         collapse.dispose();
       },
       render: _ -> child 

@@ -4,7 +4,7 @@ import pine.*;
 import pine.html.*;
 
 #if (js && !nodejs)
-@:controller(new AnimatedLifecycleController())
+@:hook(element -> new AnimatedController(element))
 #end
 class Animated extends AutoComponent {
   @:prop public final dontAnimateInitial:Bool = false;

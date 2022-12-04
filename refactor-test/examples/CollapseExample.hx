@@ -25,7 +25,7 @@ class CollapseExample extends AutoComponent {
 }
 
 class ExampleCollapseHeader extends AutoComponent {
-  @:prop final child:HtmlChild;
+  final child:HtmlChild;
 
   function render(context:Context) {
     var collapse = CollapseContext.from(context);
@@ -47,7 +47,7 @@ class ExampleCollapseHeader extends AutoComponent {
 }
 
 class ExampleCollapseBody extends AutoComponent {
-  @:prop final children:HtmlChildren;
+  final children:HtmlChildren;
 
   function render(context:Context) {
     return new CollapseItem({

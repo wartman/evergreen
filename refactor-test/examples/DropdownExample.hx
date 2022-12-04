@@ -42,8 +42,8 @@ class DropdownExample extends AutoComponent {
 }
 
 class ExampleDropdownItem extends AutoComponent {
-  @:prop final child:HtmlChild;
-  @:prop final onClick:EventListener;
+  final child:HtmlChild;
+  final onClick:EventListener;
 
   function render(context:Context) {
     return new Html<'li'>({

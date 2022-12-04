@@ -15,7 +15,7 @@ class LayerContext implements Record {
     return LayerContextProvider.from(context);
   }
   
-  @:track public var status:LayerContextStatus = Showing;
+  public var status:LayerContextStatus = Showing;
 
   public function hide():Void {
     status = Hiding;

@@ -8,8 +8,8 @@ import pine.html.*;
 @:hook(element -> new DropdownController(element))
 #end
 class DropdownContainer extends AutoComponent {
-  @:prop public final onHide:()->Void;
-  @:prop final child:HtmlChild;
+  public final onHide:()->Void;
+  final child:HtmlChild;
 
   function render(context:Context) {
     return child;

@@ -7,11 +7,11 @@ import eg.DropdownContext;
 using Nuke;
 
 class Dropdown extends AutoComponent {
-  @:prop final attachment:PositionedAttachment = { h: Middle, v: Bottom };
-  @:prop final styles:ClassName = null;
-  @:prop final label:HtmlChild;
-  @:prop final child:HtmlChild;
-  @:prop final status:DropdownStatus = Closed;
+  final attachment:PositionedAttachment = { h: Middle, v: Bottom };
+  final styles:ClassName = null;
+  final label:HtmlChild;
+  final child:HtmlChild;
+  final status:DropdownStatus = Closed;
 
   function render(context:Context) {
     return new DropdownContextProvider({

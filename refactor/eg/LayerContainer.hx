@@ -24,8 +24,8 @@ using pine.core.OptionTools;
 )
 #end
 class LayerContainer extends AutoComponent {
-  @:prop public final hideOnEscape:Bool;
-  @:prop final child:HtmlChild;
+  public final hideOnEscape:Bool;
+  final child:HtmlChild;
 
   function render(context:Context) {
     return child;

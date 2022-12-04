@@ -6,10 +6,10 @@ import pine.html.*;
 using Nuke;
 
 class Popover extends AutoComponent {
-  @:prop final child:HtmlChild;
-  @:prop final styles:ClassName = null;
-  @:prop final attachment:PositionedAttachment;
-  @:prop final getTarget:Null<()->Dynamic> = null;
+  final child:HtmlChild;
+  final styles:ClassName = null;
+  final attachment:PositionedAttachment;
+  final getTarget:Null<()->Dynamic> = null;
 
   function render(context:Context) {
     return new Portal({

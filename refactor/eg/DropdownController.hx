@@ -12,7 +12,7 @@ class DropdownController {
 
   public function new(element) {
     this.element = element;
-    element.addLifecycle({
+    element.watchLifecycle({
       afterInit: element -> {
         var el:js.html.Element = element.getObject();
 

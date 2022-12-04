@@ -1,18 +1,20 @@
 package eg;
 
 import pine.*;
+import pine.core.Disposable;
 import js.html.Element as DomElement;
 import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
 
-class AnimatedController {
+class AnimatedController implements Disposable {
   var currentAnimation:Null<Animation> = null;
   final element:ElementOf<Animated>;
 
   public function new(element) {
     this.element = element;
-    element.addLifecycle({
+    element.addDisposable(this);
+    element.watchLifecycle({
       afterInit: init,
       afterUpdate: update,
       // shouldUpdate: (element, current, incoming, isRebuild) -> {

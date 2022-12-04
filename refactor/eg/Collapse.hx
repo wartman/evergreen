@@ -7,8 +7,8 @@ import eg.CollapseContext;
 using pine.core.OptionTools;
 
 class Collapse extends AutoComponent {
-  @:prop final child:HtmlChild;
-  @:prop final duration:Int = 200;
+  final child:HtmlChild;
+  final duration:Int = 200;
 
   function render(context:Context) {
     return new CollapseContextProvider({

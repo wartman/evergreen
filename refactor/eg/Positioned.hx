@@ -7,9 +7,9 @@ import pine.html.*;
 @:hook(element -> new PositionController(element))
 #end
 class Positioned extends AutoComponent {
-  @:prop public final getTarget:()->Dynamic;
-  @:prop public final attachment:PositionedAttachment;
-  @:prop final child:HtmlChild;
+  public final getTarget:()->Dynamic;
+  public final attachment:PositionedAttachment;
+  final child:HtmlChild;
 
   function render(context:Context) {
     return child;

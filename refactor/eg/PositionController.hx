@@ -1,12 +1,14 @@
 package eg;
 
 import pine.*;
+import pine.core.Disposable;
 
-class PositionController  {
+class PositionController implements Disposable {
   final element:ElementOf<Positioned>;
 
   public function new(element) {
     this.element = element;
+    element.addDisposable(this);
     element.onReady(_ -> init());
   }
 
@@ -57,6 +59,8 @@ class PositionController  {
           + (target.offsetWidth / 2)
           - (el.offsetWidth / 2);
     }
+
+    // @todo: These position checks don't seem to be working anymore?
 
     if (overflowsVertical(top, el.offsetHeight)) top = switch vAttachment {
       case Top if (top > 0):

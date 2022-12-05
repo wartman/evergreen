@@ -9,8 +9,7 @@ using pine.core.OptionTools;
 
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };
-  final styles:ClassName = null;
-  final label:HtmlChild;
+  final toggle:HtmlChild;
   final child:HtmlChild;
   final status:DropdownStatus = Closed;
 
@@ -21,7 +20,7 @@ class Dropdown extends AutoComponent {
       render: dropdown -> new DropdownContainer({
         children: [
           new DropdownToggle({ 
-            child: label 
+            child: toggle 
           }),
           new Scope({
             render: context -> switch dropdown.status {

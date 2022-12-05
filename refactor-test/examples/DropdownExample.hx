@@ -12,7 +12,7 @@ class DropdownExample extends AutoComponent {
     return new Html<'div'>({
       children: [
         new Dropdown({
-          label: new Scope({
+          toggle: new Scope({
             render: context -> new Html<'button'>({
               onclick: e -> {
                 e.preventDefault();

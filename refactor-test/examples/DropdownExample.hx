@@ -12,7 +12,18 @@ class DropdownExample extends AutoComponent {
     return new Html<'div'>({
       children: [
         new Dropdown({
-          label: 'Open dropdown',
+          label: new Scope({
+            render: context -> new Html<'button'>({
+              onclick: e -> {
+                e.preventDefault();
+                DropdownContext.from(context).toggle();
+              },
+              children: switch DropdownContext.from(context).status {
+                case Open: 'Close Dropdown';
+                case Closed: 'Open Dropdown';
+              }
+            })
+          }),
           child: new Html<'ul'>({
             onclick: e -> e.stopPropagation(),
             className: Css.atoms({

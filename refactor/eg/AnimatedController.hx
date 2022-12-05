@@ -22,8 +22,8 @@ class AnimatedController implements Disposable {
       //   true;
       // },
       onDispose: element -> {
-        if (element.getComponent().onDispose != null) {
-          element.getComponent().onDispose(element);
+        if (element.component.onDispose != null) {
+          element.component.onDispose(element);
         }
       }
     });
@@ -47,7 +47,7 @@ class AnimatedController implements Disposable {
   function registerAnimation(element:ElementOf<Animated>, first:Bool = false) {
     if (currentAnimation != null) currentAnimation.cancel();
     
-    var animated = element.getComponent();
+    var animated = element.component;
     var el:DomElement = element.getObject();
     var duration = first && animated.dontAnimateInitial ? 0 : animated.duration;
     var keyframes = animated.createKeyframes(element);

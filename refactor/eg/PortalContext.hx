@@ -18,7 +18,7 @@ class PortalContext implements Disposable {
   #if (js && !nodejs)
   final target:js.html.Element;
   #else
-  final target:pine.render.Object;
+  final target:pine.object.Object;
   #end
 
   public function new(target) {

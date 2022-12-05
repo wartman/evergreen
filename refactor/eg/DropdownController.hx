@@ -8,7 +8,7 @@ using pine.core.OptionTools;
 // @todo: I don't think this is getting positioned right.
 @:access(pine)
 class DropdownController {
-  final element:ElementOf<DropdownContainer>;
+  final element:ElementOf<DropdownPanel>;
 
   public function new(element) {
     this.element = element;
@@ -37,7 +37,7 @@ class DropdownController {
   function hide(e:js.html.Event) {
     e.stopPropagation();
     e.preventDefault();
-    element.getComponent().onHide();
+    element.component.onHide();
   }
 
   function onKeyDown(event:js.html.KeyboardEvent) {

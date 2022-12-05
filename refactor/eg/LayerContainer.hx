@@ -16,7 +16,7 @@ using pine.core.OptionTools;
     .getObject()
   ),
   CoreHooks.watchKeypressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
-    case 'Escape' if (element.getComponent().hideOnEscape):
+    case 'Escape' if (element.component.hideOnEscape):
       e.preventDefault();
       LayerContext.from(element).hide();
     default:

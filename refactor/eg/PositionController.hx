@@ -1,9 +1,6 @@
 package eg;
 
-import haxe.ds.Option;
 import pine.*;
-
-using pine.core.OptionTools;
 
 class PositionController  {
   final element:ElementOf<Positioned>;
@@ -17,6 +14,7 @@ class PositionController  {
     js.Browser.window.addEventListener('resize', positionElement);
     js.Browser.window.addEventListener('scroll', positionElement);
     setupElement();
+    positionElement();
   }
 
   public function dispose() {
@@ -31,13 +29,14 @@ class PositionController  {
   }
 
   function positionElement() {
-    var positioned = element.getComponent();
+    var positioned = element.component;
     var el:js.html.Element = element.getObject();
     var target:js.html.Element = positioned.getTarget();
     var targetRect = target.getBoundingClientRect();
     var container = getContainerSize();
     var vAttachment = positioned.attachment.v;
     var hAttachment = positioned.attachment.h;
+
     var top = switch vAttachment {
       case Top: 
         (targetRect.top) - el.offsetHeight;

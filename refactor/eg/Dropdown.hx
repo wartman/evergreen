@@ -5,6 +5,7 @@ import pine.html.*;
 import eg.DropdownContext;
 
 using Nuke;
+using pine.core.OptionTools;
 
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };
@@ -17,23 +18,18 @@ class Dropdown extends AutoComponent {
     return new DropdownContextProvider({
       create: () -> new DropdownContext({ status: status, attachment: attachment }),
       dispose: dropdown -> dropdown.dispose(),
-      render: dropdown -> new Html<'button'>({
-        className: styles,
-        onclick: e -> {
-          e.preventDefault();
-          dropdown.toggle();
-        },
+      render: dropdown -> new DropdownContainer({
         children: [
-          label,
+          new DropdownToggle({ 
+            child: label 
+          }),
           new Scope({
             render: context -> switch dropdown.status {
               case Open: 
-                new DropdownContainer({
+                new DropdownPanel({
                   onHide: () -> dropdown.close(),
-                  child: new Popover({
-                    attachment: attachment,
-                    child: child
-                  })
+                  attachment: attachment,
+                  child: child
                 });
               case Closed: 
                 null;

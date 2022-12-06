@@ -7,6 +7,8 @@ import pine.html.*;
 using pine.core.OptionTools;
 
 #if (js && !nodejs)
+// @todo: Can we use our `takeFocus` and `watchKeypressEvents`
+// hooks here instead of making the Controller do everything?
 @:hook(DropdownController.new)
 #end
 class DropdownPanel extends AutoComponent {

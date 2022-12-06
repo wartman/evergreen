@@ -5,11 +5,11 @@ import pine.html.*;
 
 using Nuke;
 
-class Popover extends ImmutableComponent {
-  @prop final child:HtmlChild;
-  @prop final styles:ClassName = null;
-  @prop final attachment:PositionedAttachment;
-  @prop final getTarget:Null<()->Dynamic> = null;
+class Popover extends AutoComponent {
+  final child:HtmlChild;
+  final styles:ClassName = null;
+  final attachment:PositionedAttachment;
+  final getTarget:Null<()->Dynamic> = null;
 
   function render(context:Context) {
     return new Portal({
@@ -17,7 +17,7 @@ class Popover extends ImmutableComponent {
       child: new Positioned({
         getTarget: getTarget != null 
           ? getTarget 
-          : () -> switch context.findAncestorOfType(ObjectElement) {
+          : () -> switch context.queryAncestors().ofType(ObjectComponent) {
             case Some(parent): parent.getObject();
             case None: throw 'No parent object';
           },

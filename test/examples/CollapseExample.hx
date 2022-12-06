@@ -6,7 +6,7 @@ import eg.*;
 
 using Nuke;
 
-class CollapseExample extends ImmutableComponent {
+class CollapseExample extends AutoComponent {
   function render(context:Context) {
     return new Collapse({
       child: new Html<'div'>({
@@ -24,20 +24,20 @@ class CollapseExample extends ImmutableComponent {
   }
 }
 
-class ExampleCollapseHeader extends ImmutableComponent {
-  @prop final child:HtmlChild;
+class ExampleCollapseHeader extends AutoComponent {
+  final child:HtmlChild;
 
   function render(context:Context) {
     var collapse = CollapseContext.from(context);
 
     return new Html<'button'>({
       onclick: _ -> collapse.toggle(),
-      children: new Isolate({
+      children: new Scope({
         // `collapse.status` is a State, so we can observe it
         // for changes. In a real implementation, this might be
         // where you have a chevron icon rotate or otherwise
         // indicate a collapsed/expanded status.
-        wrap: _ -> switch collapse.status {
+        render: _ -> switch collapse.status {
           case Collapsed: new Fragment({ children: [ child, (' +':HtmlChild) ] });
           case Expanded: new Fragment({ children: [ child, (' -':HtmlChild) ] });
         }
@@ -46,8 +46,8 @@ class ExampleCollapseHeader extends ImmutableComponent {
   }
 }
 
-class ExampleCollapseBody extends ImmutableComponent {
-  @prop final children:HtmlChildren;
+class ExampleCollapseBody extends AutoComponent {
+  final children:HtmlChildren;
 
   function render(context:Context) {
     return new CollapseItem({

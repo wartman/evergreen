@@ -6,7 +6,7 @@ import eg.*;
 
 using Nuke;
 
-class AnimatedExample extends ImmutableComponent {
+class AnimatedExample extends AutoComponent {
   function render(context:Context) {
     return new Animated({
       createKeyframes: _ -> [

@@ -6,28 +6,25 @@ import eg.LayerContext;
 
 using Nuke;
 
-class Layer extends ImmutableComponent {
-  @prop final beforeShow:()->Void = null;
-  @prop final onShow:()->Void = null;
-  @prop final onHide:()->Void;
-  @prop final hideOnClick:Bool = true;
-  @prop final hideOnEscape:Bool = true;
-  @prop final child:HtmlChild;
-  @prop final transitionSpeed:Int = 150;
-  @prop final styles:ClassName = null;
-  @prop final showAnimation:Keyframes = [ { opacity: 0 }, { opacity: 1 } ];
-  @prop final hideAnimation:Keyframes = null;
-
-  override function init(context:InitContext) {
-    if (beforeShow != null) beforeShow();
-  }
+class Layer extends AutoComponent {
+  final beforeShow:()->Void = null;
+  final onShow:()->Void = null;
+  final onHide:()->Void;
+  final hideOnClick:Bool = true;
+  final hideOnEscape:Bool = true;
+  final child:HtmlChild;
+  final transitionSpeed:Int = 150;
+  final styles:ClassName = null;
+  final showAnimation:Keyframes = [ { opacity: 0 }, { opacity: 1 } ];
+  final hideAnimation:Keyframes = null;
 
   public function render(context:Context):Component {
     return new LayerContextProvider({
       create: () -> new LayerContext({}),
       dispose: layer -> layer.dispose(),
-      render: layer -> new Isolate({
-        wrap: _ -> {
+      render: layer -> new Scope({
+        init: _ -> if (beforeShow != null) beforeShow(),
+        render: context -> {
           var status = layer.status;
           var body = new Html<'div'>({
             className: ClassName.ofArray([
@@ -79,12 +76,8 @@ class Layer extends ImmutableComponent {
   }
 }
 
-class LayerTarget extends ImmutableComponent {
-  public static function maybeFrom(context:Context) {
-    return context.queryFirstChildOfComponentType(LayerTarget);
-  }
-  
-  @prop final child:Component;
+class LayerTarget extends AutoComponent {
+  final child:Component;
 
   function render(context:Context) {
     return child;

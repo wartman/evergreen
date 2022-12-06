@@ -14,8 +14,8 @@ class DropdownContext implements Record {
     return DropdownContextProvider.from(context);
   }
 
-  @track public var status:DropdownStatus;
-  @prop public final attachment:PositionedAttachment;
+  public final attachment:PositionedAttachment;
+  public var status:DropdownStatus;
 
   public function open() {
     status = Open;

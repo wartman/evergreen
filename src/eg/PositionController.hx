@@ -60,8 +60,6 @@ class PositionController implements Disposable {
           - (el.offsetWidth / 2);
     }
 
-    // @todo: These position checks don't seem to be working anymore?
-
     if (overflowsVertical(top, el.offsetHeight)) top = switch vAttachment {
       case Top if (top > 0):
         container.bottom - el.offsetHeight;

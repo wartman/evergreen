@@ -2,8 +2,6 @@ package eg;
 
 import pine.*;
 
-using pine.Cast;
-
 typedef FocusContextProvider = Provider<FocusContext>; 
 
 class FocusContext {
@@ -29,7 +27,7 @@ class FocusContext {
 
   public function focus(object:Dynamic) {
     #if (js && !nodejs)
-    var el = object.as(js.html.Element);
+    var el:js.html.Element = object;
     if (previous == null) {
       previous = el.ownerDocument.activeElement;
     }

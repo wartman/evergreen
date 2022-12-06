@@ -1,68 +1,22 @@
 package eg;
 
 import pine.*;
+import pine.html.*;
 
 #if (js && !nodejs)
-import js.html.Element as DomElement;
-import js.html.Animation;
-
-using eg.internal.DomAnimationTools;
+@:hook(AnimatedController.new)
 #end
+class Animated extends AutoComponent {
+  public final dontAnimateInitial:Bool = false;
+  public final createKeyframes:KeyframeFactory;
+  public final duration:Int;
+  public final infinite:Bool = false;
+  public final easing:String = 'linear';
+  public final onFinished:(context:Context)->Void = null;
+  public final onDispose:(context:Context)->Void = null;
+  final child:HtmlChild;
 
-class Animated extends HookComponent {
-  @prop public final dontAnimateInitial:Bool = false;
-  @prop public final createKeyframes:KeyframeFactory;
-  @prop public final duration:Int;
-  @prop public final infinite:Bool = false;
-  @prop public final easing:String = 'linear';
-  @prop public final onFinished:(context:Context)->Void = null;
-  @prop public final onDispose:(context:Context)->Void = null;
-
-  public function createElement():Element {
-    return new AnimatedElement(this);
+  function render(context:Context) {
+    return child;
   }
-}
-
-@component(Animated)
-class AnimatedElement extends HookElement {
-  function onUpdate(previousComponent:Null<Component>) {
-    #if (js && !nodejs)
-    if (previousComponent == null || component != previousComponent) {
-      registerAnimation(previousComponent == null);
-    }
-    #end
-  }
-
-  function performDispose() {
-    #if (js && !nodejs)
-    if (currentAnimation != null) {
-      currentAnimation.cancel();
-      currentAnimation = null;
-    }
-    #end
-    if (animated.onDispose != null) animated.onDispose(this);
-  }
-
-  #if (js && !nodejs)
-  var currentAnimation:Null<Animation> = null;
-
-  function registerAnimation(first:Bool = false) {
-    if (currentAnimation != null) currentAnimation.cancel();
-    
-    var el:DomElement = getObject();
-    var duration = first && animated.dontAnimateInitial ? 0 : animated.duration;
-    var keyframes = animated.createKeyframes(this);
-
-    currentAnimation = el.registerAnimations(keyframes, {
-      duration: duration,
-      easing: animated.easing,
-      iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
-    }, onFinished);
-  }
-
-  function onFinished() {
-    if (currentAnimation != null) currentAnimation = null;
-    if (animated.onFinished != null) animated.onFinished(this);
-  }
-  #end
 }

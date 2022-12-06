@@ -4,9 +4,11 @@ import pine.*;
 import pine.html.*;
 import eg.CollapseContext;
 
-class Collapse extends ImmutableComponent {
-  @prop final child:HtmlChild;
-  @prop final duration:Int = 200;
+using pine.core.OptionTools;
+
+class Collapse extends AutoComponent {
+  final child:HtmlChild;
+  final duration:Int = 200;
 
   function render(context:Context) {
     return new CollapseContextProvider({
@@ -15,17 +17,15 @@ class Collapse extends ImmutableComponent {
           status: Collapsed,
           duration: duration
         });
-        switch AccordianContext.maybeFrom(context) {
-          case Some(accordian): accordian.add(collapse);
-          case None:
-        }
+        AccordianContext
+          .maybeFrom(context)
+          .some(accordian -> accordian.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
-        switch AccordianContext.maybeFrom(context) {
-          case Some(accordian): accordian.remove(collapse);
-          case None:
-        }
+        AccordianContext
+          .maybeFrom(context)
+          .some(accordian -> accordian.remove(collapse));
         collapse.dispose();
       },
       render: _ -> child 

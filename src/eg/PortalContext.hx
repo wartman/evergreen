@@ -1,6 +1,8 @@
 package eg;
 
 import pine.*;
+import pine.debug.Debug;
+import pine.core.Disposable;
 
 typedef PortalContextProvider = pine.Provider<PortalContext>;
 
@@ -14,9 +16,9 @@ class PortalContext implements Disposable {
   }
 
   #if (js && !nodejs)
-    final target:js.html.Element;
+  final target:js.html.Element;
   #else
-    final target:pine.render.Object;
+  final target:pine.object.Object;
   #end
 
   public function new(target) {

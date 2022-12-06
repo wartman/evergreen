@@ -1,58 +1,33 @@
 package eg;
 
 import pine.*;
+import pine.html.*;
 import eg.Layer;
 
 using Nuke;
-using pine.Cast;
+using pine.core.OptionTools;
 
-class LayerContainer extends HookComponent {
-  @prop public final hideOnEscape:Bool;
+#if (js && !nodejs)
+@:hook(
+  CoreHooks.takeFocus(element -> element
+    .queryChildren()
+    .findOfType(LayerTarget, true)
+    .orThrow('Expected a LayerTarget')
+    .getObject()
+  ),
+  CoreHooks.watchKeypressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
+    case 'Escape' if (element.component.hideOnEscape):
+      e.preventDefault();
+      LayerContext.from(element).hide();
+    default:
+  })
+)
+#end
+class LayerContainer extends AutoComponent {
+  public final hideOnEscape:Bool;
+  final child:HtmlChild;
 
-  public function createElement():Element {
-    return new LayerContainerElement(this);
+  function render(context:Context) {
+    return child;
   }
-}
-
-@component(LayerContainer)
-class LayerContainerElement extends HookElement {
-  function onUpdate(previousComponent:Null<Component>) {
-    #if (js && !nodejs)
-    if (previousComponent != null) return;
-    var el = getTargetElement();
-    el.ownerDocument.addEventListener('keydown', onKeyDown);
-    FocusContext.from(this).focus(el);
-    #end
-  }
-
-  function performDispose() {
-    #if (js && !nodejs)
-    var el = getTargetElement();
-    el.ownerDocument.removeEventListener('keydown', onKeyDown);
-    FocusContext.from(this).returnFocus();
-    #end
-  }
-
-  #if (js && !nodejs)
-  inline function getTargetElement():js.html.Element {
-    return switch LayerTarget.maybeFrom(this) {
-      case Some(element):
-        element.getObject().as(js.html.Element);
-      case None: 
-        Portal.getObjectMaybeInPortal(this).as(js.html.Element);
-    }
-  }
-
-  function hide(e:js.html.Event) { 
-    e.preventDefault();
-    LayerContext.from(this).hide();
-  }
-
-  function onKeyDown(event:js.html.KeyboardEvent) {
-    switch event.key {
-      case 'Escape' if (layerContainer.hideOnEscape): hide(event);
-      default:
-    }
-  }
-  #end
 }

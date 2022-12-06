@@ -5,35 +5,30 @@ import pine.html.*;
 import eg.DropdownContext;
 
 using Nuke;
+using pine.core.OptionTools;
 
-class Dropdown extends ImmutableComponent {
-  @prop final attachment:PositionedAttachment = { h: Middle, v: Bottom };
-  @prop final styles:ClassName = null;
-  @prop final label:HtmlChild;
-  @prop final child:HtmlChild;
-  @prop final status:DropdownStatus = Closed;
+class Dropdown extends AutoComponent {
+  final attachment:PositionedAttachment = { h: Middle, v: Bottom };
+  final toggle:HtmlChild;
+  final child:HtmlChild;
+  final status:DropdownStatus = Closed;
 
   function render(context:Context) {
     return new DropdownContextProvider({
       create: () -> new DropdownContext({ status: status, attachment: attachment }),
       dispose: dropdown -> dropdown.dispose(),
-      render: dropdown -> new Html<'button'>({
-        className: styles,
-        onclick: e -> {
-          e.preventDefault();
-          dropdown.toggle();
-        },
+      render: dropdown -> new DropdownContainer({
         children: [
-          label,
-          new Isolate({
-            wrap: context -> switch dropdown.status {
+          new DropdownToggle({ 
+            child: toggle 
+          }),
+          new Scope({
+            render: context -> switch dropdown.status {
               case Open: 
-                new DropdownContainer({
+                new DropdownPanel({
                   onHide: () -> dropdown.close(),
-                  child: new Popover({
-                    attachment: attachment,
-                    child: child
-                  })
+                  attachment: attachment,
+                  child: child
                 });
               case Closed: 
                 null;

@@ -17,8 +17,8 @@ class CollapseContext implements Record {
     }
   }
 
-  @track public var status:CollapseContextStatus;
-  @prop public final duration:Int = 200;
+  public var status:CollapseContextStatus;
+  public final duration:Int = 200;
 
   public function toggle() {
     switch status {

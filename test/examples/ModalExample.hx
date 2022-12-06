@@ -6,8 +6,8 @@ import eg.*;
 
 using Nuke;
 
-class ModalExample extends ObserverComponent {
-  @track var isOpen:Bool = false;
+class ModalExample extends AutoComponent {
+  var isOpen:Bool = false;
 
   function render(context:Context) {
     return new Html<'div'>({

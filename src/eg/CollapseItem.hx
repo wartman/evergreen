@@ -2,11 +2,12 @@ package eg;
 
 import pine.*;
 import pine.html.*;
+import pine.debug.Debug;
 
 using Nuke;
 
-class CollapseItem extends ObserverComponent {
-  @prop final child:HtmlChild;
+class CollapseItem extends AutoComponent {
+  final child:HtmlChild;
  
   function render(context:Context) {
     Debug.assert(!(child is Fragment));

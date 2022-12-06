@@ -6,12 +6,12 @@ import eg.internal.DomTools;
 
 using Nuke;
 
-class Modal extends ImmutableComponent {
-  @prop final styles:ClassName = null;
-  @prop final layerStyles:ClassName = null;
-  @prop final onHide:()->Void;
-  @prop final children:HtmlChildren;
-  @prop final hideOnEscape:Bool = true;
+class Modal extends AutoComponent {
+  final styles:ClassName = null;
+  final layerStyles:ClassName = null;
+  final onHide:()->Void;
+  final children:HtmlChildren;
+  final hideOnEscape:Bool = true;
 
   public function render(context:Context):Component {
     return new Portal({

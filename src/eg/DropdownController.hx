@@ -5,13 +5,13 @@ import pine.*;
 
 using pine.core.OptionTools;
 
-// @todo: I don't think this is getting positioned right.
 @:access(pine)
 class DropdownController {
   final element:ElementOf<DropdownPanel>;
 
   public function new(element) {
     this.element = element;
+    
     element.watchLifecycle({
       afterInit: element -> {
         var el:js.html.Element = element.getObject();

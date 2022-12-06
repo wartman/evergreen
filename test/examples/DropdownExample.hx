@@ -7,12 +7,23 @@ import eg.*;
 
 using Nuke;
 
-class DropdownExample extends ImmutableComponent {
+class DropdownExample extends AutoComponent {
   function render(context:Context) {
     return new Html<'div'>({
       children: [
         new Dropdown({
-          label: 'Open dropdown',
+          toggle: new Scope({
+            render: context -> new Html<'button'>({
+              onclick: e -> {
+                e.preventDefault();
+                DropdownContext.from(context).toggle();
+              },
+              children: switch DropdownContext.from(context).status {
+                case Open: 'Close Dropdown';
+                case Closed: 'Open Dropdown';
+              }
+            })
+          }),
           child: new Html<'ul'>({
             onclick: e -> e.stopPropagation(),
             className: Css.atoms({
@@ -41,9 +52,9 @@ class DropdownExample extends ImmutableComponent {
   }
 }
 
-class ExampleDropdownItem extends ImmutableComponent {
-  @prop final child:HtmlChild;
-  @prop final onClick:EventListener;
+class ExampleDropdownItem extends AutoComponent {
+  final child:HtmlChild;
+  final onClick:EventListener;
 
   function render(context:Context) {
     return new Html<'li'>({

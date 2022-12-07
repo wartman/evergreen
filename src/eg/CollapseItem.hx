@@ -16,15 +16,15 @@ class CollapseItem extends AutoComponent {
  
     return new Animated({
       dontAnimateInitial: true,
-      createKeyframes: switch collapse.status {
-        case Collapsed: context -> [
+      keyframes: switch collapse.status {
+        case Collapsed: new Keyframes('in', context -> [
           { height: getHeight(context), offset: 0 },
           { height: 0, offset: 1 }
-        ];
-        case Expanded: context -> [
+        ]);
+        case Expanded: new Keyframes('out', context -> [
           { height: 0, offset: 0 },
           { height: getHeight(context), offset: 1 }
-        ];
+        ]);
       },
       onFinished: context -> {
         #if (js && !nodejs)

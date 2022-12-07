@@ -9,10 +9,10 @@ using Nuke;
 class AnimatedExample extends AutoComponent {
   function render(context:Context) {
     return new Animated({
-      createKeyframes: _ -> [
+      keyframes: new Keyframes('auto', _ ->  [
         { transform: 'rotate(0)' },
         { transform: 'rotate(360deg)' }
-      ],
+      ]),
       duration: 1000,
       infinite: true,
       onFinished: _ -> trace('ok'),

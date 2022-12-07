@@ -6,6 +6,9 @@ import eg.LayerContext;
 
 using Nuke;
 
+final defaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
+final defaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
+
 class Layer extends AutoComponent {
   final beforeShow:()->Void = null;
   final onShow:()->Void = null;
@@ -15,8 +18,8 @@ class Layer extends AutoComponent {
   final child:HtmlChild;
   final transitionSpeed:Int = 150;
   final styles:ClassName = null;
-  final showAnimation:Keyframes = [ { opacity: 0 }, { opacity: 1 } ];
-  final hideAnimation:Keyframes = null;
+  final showAnimation:Keyframes = defaultShowAnimation;
+  final hideAnimation:Keyframes = defaultHideAnimation;
 
   public function render(context:Context):Component {
     return new LayerContextProvider({
@@ -49,11 +52,9 @@ class Layer extends AutoComponent {
             children: new LayerTarget({ child: child })
           });
           var animation = new Animated({
-            createKeyframes: switch status { 
+            keyframes: switch status { 
               case Showing: showAnimation;
-              case Hiding: hideAnimation == null
-                ? showAnimation.invert()
-                : hideAnimation;
+              case Hiding: hideAnimation;
             },
             duration: transitionSpeed,
             onFinished: _ -> switch status {

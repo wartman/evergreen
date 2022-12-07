@@ -8,7 +8,8 @@ import pine.html.*;
 #end
 class Animated extends AutoComponent {
   public final dontAnimateInitial:Bool = false;
-  public final createKeyframes:KeyframeFactory;
+  public final dontRepeatCurrentAnimation:Bool = true;
+  public final keyframes:Keyframes;
   public final duration:Int;
   public final infinite:Bool = false;
   public final easing:String = 'linear';

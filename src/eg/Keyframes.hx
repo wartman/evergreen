@@ -5,23 +5,20 @@ import pine.Context;
 using Lambda;
 using Reflect;
 
-@:forward
-abstract Keyframes(Array<Keyframe>) from Array<Keyframe> to Array<Keyframe> {
-  public inline function new(keyframes) {
-    this = keyframes;
+class Keyframes {
+  public final id:String;
+  public final factory:(context:Context) -> Array<{}>;
+
+  public function new(id, factory) {
+    this.id = id;
+    this.factory = factory;
   }
 
-  public inline function invert():Keyframes {
-    var keyframes = this.copy();
-    keyframes.reverse();
-    for (frame in keyframes) {
-      // @todo: Look into how to invert this. 
-      frame.deleteField('offset');
-    }
-    return new Keyframes(keyframes);
+  public function equals(other:Keyframes) {
+    return id == other.id;
   }
 
-  @:to inline public function toKeyframeFactory():KeyframeFactory {
-    return (conetxt:Context) -> this;
-  } 
+  public function create(context) {
+    return factory(context);
+  }
 }

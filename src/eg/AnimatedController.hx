@@ -8,6 +8,7 @@ import js.html.Animation;
 using eg.internal.DomAnimationTools;
 
 class AnimatedController implements Disposable {
+  var currentKeyframes:Null<Keyframes> = null;
   var currentAnimation:Null<Animation> = null;
   final element:ElementOf<Animated>;
 
@@ -17,10 +18,6 @@ class AnimatedController implements Disposable {
     element.watchLifecycle({
       afterInit: init,
       afterUpdate: update,
-      // shouldUpdate: (element, current, incoming, isRebuild) -> {
-      //   // @todo: Check if we're actually trying to change animation state?
-      //   true;
-      // },
       onDispose: element -> {
         if (element.component.onDispose != null) {
           element.component.onDispose(element);
@@ -45,19 +42,30 @@ class AnimatedController implements Disposable {
   }
 
   function registerAnimation(element:ElementOf<Animated>, first:Bool = false) {
-    if (currentAnimation != null) currentAnimation.cancel();
-    
     var animated = element.component;
     var el:DomElement = element.getObject();
     var duration = first && animated.dontAnimateInitial ? 0 : animated.duration;
-    var keyframes = animated.createKeyframes(element);
+    var keyframes = animated.keyframes;
+
+    if (animated.dontRepeatCurrentAnimation) {
+      if (currentKeyframes != null && currentKeyframes.equals(keyframes)) {
+        return;
+      }
+    }
+
+    currentKeyframes = keyframes;
+    
+    if (currentAnimation != null) {
+      currentAnimation.cancel();
+      currentAnimation = null;
+    }
     
     function onFinished() {
-      if (currentAnimation != null) currentAnimation = null;
+      currentAnimation = null;
       if (animated.onFinished != null) animated.onFinished(element);
     }
 
-    currentAnimation = el.registerAnimations(keyframes, {
+    currentAnimation = el.registerAnimations(keyframes.create(element), {
       duration: duration,
       easing: animated.easing,
       iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1

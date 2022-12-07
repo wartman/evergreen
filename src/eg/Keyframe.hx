@@ -1,3 +1,0 @@
-package eg;
-
-typedef Keyframe = {} 

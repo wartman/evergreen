@@ -4,7 +4,7 @@ import pine.*;
 import pine.html.*;
 
 #if (js && !nodejs)
-@:hook(PositionController.new)
+@:hook(PositionedHooks.controlElementPosition())
 #end
 class Positioned extends AutoComponent {
   public final getTarget:()->Dynamic;

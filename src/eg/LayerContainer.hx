@@ -15,7 +15,7 @@ using pine.core.OptionTools;
     .orThrow('Expected a LayerTarget')
     .getObject()
   ),
-  CoreHooks.watchKeypressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
+  CoreHooks.watchKeyPressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
     case 'Escape' if (element.component.hideOnEscape):
       e.preventDefault();
       LayerContext.from(element).hide();

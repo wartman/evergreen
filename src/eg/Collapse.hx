@@ -17,13 +17,13 @@ class Collapse extends AutoComponent {
           status: Collapsed,
           duration: duration
         });
-        AccordianContext
+        AccordionContext
           .maybeFrom(context)
           .some(accordian -> accordian.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
-        AccordianContext
+        AccordionContext
           .maybeFrom(context)
           .some(accordian -> accordian.remove(collapse));
         collapse.dispose();

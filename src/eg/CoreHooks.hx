@@ -9,14 +9,14 @@ function takeFocus<T:Component>(getTargetObject:(element:Element)->js.html.Eleme
       afterInit: element -> {
         FocusContext.from(element).focus(getTargetObject(element));
       },
-      onDispose: element -> {
+      beforeDispose: element -> {
         FocusContext.from(element).returnFocus();
       }
     });
   }
 }
 
-function watchKeypressEvents<T:Component>(handle:(e:KeyboardEvent, element:ElementOf<T>)->Void):Hook<T> {
+function watchKeyPressEvents<T:Component>(handle:(e:KeyboardEvent, element:ElementOf<T>)->Void):Hook<T> {
   return element -> {
     function onKeyDown(e:KeyboardEvent) {
       handle(e, element);
@@ -27,7 +27,7 @@ function watchKeypressEvents<T:Component>(handle:(e:KeyboardEvent, element:Eleme
         var el:js.html.Element = element.getObject();
         el.ownerDocument.addEventListener('keydown', onKeyDown);
       },
-      onDispose: element -> {
+      beforeDispose: element -> {
         var el:js.html.Element = element.getObject();
         el.ownerDocument.removeEventListener('keydown', onKeyDown);
       }

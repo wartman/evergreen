@@ -4,25 +4,25 @@ import pine.*;
 import pine.state.*;
 import pine.core.Disposable;
 
-typedef AccordianContextProvider = Provider<AccordianContext>;
+typedef AccordionContextProvider = Provider<AccordionContext>;
 
-enum abstract AccordianContextStatus(Int) {
+enum abstract AccordionContextStatus(Int) {
   final Updating;
   final Pending;
 }
 
-class AccordianContext implements Disposable {
+class AccordionContext implements Disposable {
   public inline static function from(context:Context) {
-    return AccordianContextProvider.from(context);
+    return AccordionContextProvider.from(context);
   }
 
   public inline static function maybeFrom(context:Context) {
-    return AccordianContextProvider.maybeFrom(context);
+    return AccordionContextProvider.maybeFrom(context);
   }
 
   final children:Map<CollapseContext, Observer> = [];
   var sticky:Bool;
-  var status:AccordianContextStatus = Pending;
+  var status:AccordionContextStatus = Pending;
 
   public function new(props:{
     sticky:Bool

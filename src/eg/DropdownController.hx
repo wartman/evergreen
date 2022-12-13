@@ -8,6 +8,7 @@ using pine.core.OptionTools;
 @:access(pine)
 class DropdownController {
   final element:ElementOf<DropdownPanel>;
+  var current:Null<Element> = null;
 
   public function new(element) {
     this.element = element;
@@ -22,7 +23,7 @@ class DropdownController {
 
         maybeFocusFirst();
       },
-      onDispose: element -> {
+      beforeDispose: element -> {
         var el:js.html.Element = element.getObject();
 
         // el.removeEventListener('click', syncClicksWithActiveElement);
@@ -90,8 +91,6 @@ class DropdownController {
       case None:
     }
   }
-
-  var current:Null<Element> = null;
 
   function getNextFocusedChild(offset:Int):Option<Element> {
     var items = element.queryChildren().filterOfType(DropdownItem, true);

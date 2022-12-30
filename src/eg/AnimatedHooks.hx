@@ -43,7 +43,7 @@ function controlElementAnimation():Hook<Animated> {
     }
 
     element.watchLifecycle({
-      afterInit: element -> registerAnimation(element, true),
+      afterInit: (element, _) -> registerAnimation(element, true),
       afterUpdate: element -> registerAnimation(element, false),
       beforeDispose: element -> {
         if (currentAnimation != null) {

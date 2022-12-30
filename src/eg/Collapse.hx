@@ -19,13 +19,13 @@ class Collapse extends AutoComponent {
         });
         AccordionContext
           .maybeFrom(context)
-          .some(accordian -> accordian.add(collapse));
+          .some(accordion -> accordion.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
         AccordionContext
           .maybeFrom(context)
-          .some(accordian -> accordian.remove(collapse));
+          .some(accordion -> accordion.remove(collapse));
         collapse.dispose();
       },
       render: _ -> child 

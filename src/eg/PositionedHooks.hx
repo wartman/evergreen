@@ -7,7 +7,7 @@ function controlElementPosition():Hook<Positioned> {
     var positionElement = createElementPositioner(element);
 
     element.watchLifecycle({
-      afterInit: element -> {
+      afterInit: (element, _) -> {
         js.Browser.window.addEventListener('resize', positionElement);
         js.Browser.window.addEventListener('scroll', positionElement);
       

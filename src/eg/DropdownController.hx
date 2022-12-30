@@ -14,7 +14,7 @@ class DropdownController {
     this.element = element;
     
     element.watchLifecycle({
-      afterInit: element -> {
+      afterInit: (element, _) -> {
         var el:js.html.Element = element.getObject();
 
         // el.addEventListener('click', syncClicksWithActiveElement);

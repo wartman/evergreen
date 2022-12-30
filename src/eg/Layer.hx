@@ -3,14 +3,18 @@ package eg;
 import pine.*;
 import pine.html.*;
 import eg.LayerContext;
+import pine.CoreHooks;
 
 using Nuke;
 
 final defaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
 final defaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
 
+@:hook(beforeInit((el:ElementOf<Layer>) -> {
+  if (el.component.beforeShow != null) el.component.beforeShow();
+}))
 class Layer extends AutoComponent {
-  final beforeShow:()->Void = null;
+  public final beforeShow:()->Void = null;
   final onShow:()->Void = null;
   final onHide:()->Void;
   final hideOnClick:Bool = true;
@@ -26,7 +30,6 @@ class Layer extends AutoComponent {
       create: () -> new LayerContext({}),
       dispose: layer -> layer.dispose(),
       render: layer -> new Scope({
-        init: _ -> if (beforeShow != null) beforeShow(),
         render: context -> {
           var status = layer.status;
           var body = new Html<'div'>({

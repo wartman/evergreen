@@ -6,7 +6,7 @@ import pine.*;
 function takeFocus<T:Component>(getTargetObject:(element:Element)->js.html.Element):Hook<T> {
   return element -> {
     element.watchLifecycle({
-      afterInit: element -> {
+      afterInit: (element, _) -> {
         FocusContext.from(element).focus(getTargetObject(element));
       },
       beforeDispose: element -> {
@@ -23,7 +23,7 @@ function watchKeyPressEvents<T:Component>(handle:(e:KeyboardEvent, element:Eleme
     }
 
     element.watchLifecycle({
-      afterInit: element -> {
+      afterInit: (element, _) -> {
         var el:js.html.Element = element.getObject();
         el.ownerDocument.addEventListener('keydown', onKeyDown);
       },

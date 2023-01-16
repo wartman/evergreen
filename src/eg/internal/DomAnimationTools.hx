@@ -1,9 +1,8 @@
 package eg.internal;
 
 import js.Browser.window;
-import js.html.Element;
 import js.html.Animation;
-import js.html.KeyframeAnimationOptions;
+import js.html.Element;
 import js.lib.Promise;
 
 using Reflect;

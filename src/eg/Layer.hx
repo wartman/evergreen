@@ -1,9 +1,9 @@
 package eg;
 
-import pine.*;
-import pine.html.*;
 import eg.LayerContext;
+import pine.*;
 import pine.CoreHooks;
+import pine.html.*;
 
 using Nuke;
 
@@ -56,8 +56,10 @@ class Layer extends AutoComponent {
           });
           var animation = new Animated({
             keyframes: switch status { 
-              case Showing: showAnimation;
-              case Hiding: hideAnimation;
+              case Showing: 
+                showAnimation;
+              case Hiding: 
+                hideAnimation;
             },
             duration: transitionSpeed,
             onFinished: _ -> switch status {

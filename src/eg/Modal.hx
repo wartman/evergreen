@@ -1,8 +1,8 @@
 package eg;
 
+import eg.internal.DomTools;
 import pine.*;
 import pine.html.*;
-import eg.internal.DomTools;
 
 using Nuke;
 

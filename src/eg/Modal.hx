@@ -12,6 +12,7 @@ class Modal extends AutoComponent {
   final onHide:()->Void;
   final children:HtmlChildren;
   final hideOnEscape:Bool = true;
+  final hideOnClick:Bool = true;
 
   public function render(context:Context):Component {
     return new Portal({
@@ -19,6 +20,7 @@ class Modal extends AutoComponent {
       child: new Layer({
         styles: layerStyles,
         hideOnEscape: hideOnEscape,
+        hideOnClick: hideOnClick,
         beforeShow: () -> {
           lockBody();
         },

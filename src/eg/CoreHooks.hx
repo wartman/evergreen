@@ -22,19 +22,16 @@ function useKeyPressEvents<T:Component>(
   context:Context,
   handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
 ) {
-  function onKeyDown(e:KeyboardEvent) {
-    handle(e, context);
-  }
-
   var hook = Hook.from(context);
-
+  var onKeyDown = hook.useState(
+    () -> (e:KeyboardEvent) -> handle(e, context),
+    onKeyDown -> {
+      var el:js.html.Element = context.getObject();
+      el.ownerDocument.removeEventListener('keydown', onKeyDown);
+    }
+  );
   hook.useNext(() -> {
     var el:js.html.Element = context.getObject();
     el.ownerDocument.addEventListener('keydown', onKeyDown);
-  });
-
-  hook.useCleanup(() -> {
-    var el:js.html.Element = context.getObject();
-    el.ownerDocument.removeEventListener('keydown', onKeyDown);
   });
 }

@@ -5,9 +5,10 @@ import js.html.Element as DomElement;
 import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
+using pine.CoreHooks;
 
-function controlElementAnimation():Hook<Animated> {
-  return element -> {
+function controlElementAnimation(hook:Hook<Animated>) {
+  hook.useElement(element -> {
     var currentKeyframes:Null<Keyframes> = null;
     var currentAnimation:Null<Animation> = null;
 
@@ -42,19 +43,21 @@ function controlElementAnimation():Hook<Animated> {
       }, onFinished);
     }
 
-    element.watchLifecycle({
-      afterInit: (element, _) -> registerAnimation(element, true),
-      afterUpdate: element -> registerAnimation(element, false),
-      beforeDispose: element -> {
-        if (currentAnimation != null) {
-          currentAnimation.cancel();
-          currentAnimation = null;
-        }
-        currentKeyframes = null;
-        if (element.component.onDispose != null) {
-          element.component.onDispose(element);
-        }
+    var links = [
+      element.events.afterInit.add((element, _) -> registerAnimation(element, true)),
+      element.events.afterUpdate.add(element -> registerAnimation(element, false)),
+      element.events.beforeDispose.add(_ -> if (element.component.onDispose != null) {
+        element.component.onDispose(element);
+      })
+    ];
+
+    () -> {
+      if (currentAnimation != null) {
+        currentAnimation.cancel();
+        currentAnimation = null;
       }
-    });
-  }
+      currentKeyframes = null; 
+      for (cancel in links) cancel();
+    };
+  });
 }

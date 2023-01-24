@@ -3,9 +3,6 @@ package eg;
 import pine.*;
 import pine.html.*;
 
-#if (js && !nodejs)
-@:hook(AnimatedHooks.controlElementAnimation())
-#end
 class Animated extends AutoComponent {
   public final dontAnimateInitial:Bool = false;
   public final dontRepeatCurrentAnimation:Bool = true;
@@ -18,6 +15,9 @@ class Animated extends AutoComponent {
   final child:HtmlChild;
 
   function render(context:Context) {
+    #if (js && !nodejs)
+    AnimatedHooks.controlElementAnimation(Hook.from(context));
+    #end
     return child;
   }
 }

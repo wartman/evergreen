@@ -2,27 +2,28 @@ package eg;
 
 import pine.*;
 
-function controlElementPosition():Hook<Positioned> {
-  return element -> {
+using pine.CoreHooks;
+
+function usePosition(hook:Hook<Positioned>) {
+  hook.useElement(element -> {
     var positionElement = createElementPositioner(element);
 
-    element.watchLifecycle({
-      afterInit: (element, _) -> {
-        js.Browser.window.addEventListener('resize', positionElement);
-        js.Browser.window.addEventListener('scroll', positionElement);
-      
-        var el:js.html.Element = element.getObject();
-        el.style.position = 'fixed';
-        el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
-
-        positionElement();
-      },
-      beforeDispose: element -> {
-        js.Browser.window.removeEventListener('resize', positionElement);
-        js.Browser.window.removeEventListener('scroll', positionElement);
-      }
+    hook.useNext(() -> {
+      js.Browser.window.addEventListener('resize', positionElement);
+      js.Browser.window.addEventListener('scroll', positionElement);
+    
+      var el:js.html.Element = element.getObject();
+      el.style.position = 'fixed';
+      el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
+  
+      positionElement();
     });
-  };
+
+    () -> {
+      js.Browser.window.removeEventListener('resize', positionElement);
+      js.Browser.window.removeEventListener('scroll', positionElement);
+    }
+  });
 }
 
 private function createElementPositioner(element:ElementOf<Positioned>) return function () {

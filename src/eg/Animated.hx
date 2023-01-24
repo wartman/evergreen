@@ -16,7 +16,7 @@ class Animated extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    AnimatedHooks.controlElementAnimation(Hook.from(context));
+    AnimatedHooks.useAnimation(context);
     #end
     return child;
   }

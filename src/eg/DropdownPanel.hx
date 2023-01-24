@@ -12,7 +12,7 @@ class DropdownPanel extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    DropdownHooks.useDropdown(Hook.from(context));
+    DropdownHooks.useDropdown(context);
     #end
     return new Popover({
       getTarget: () -> context

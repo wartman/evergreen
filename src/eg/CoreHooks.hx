@@ -3,11 +3,11 @@ package eg;
 import js.html.KeyboardEvent;
 import pine.*;
 
-function takeFocus<T:Component>(
-  hook:Hook<T>,
+function useFocus<T:Component>(
+  context:Context,
   getTargetObject:(element:Element)->js.html.Element
 ) {
-  hook.useElement(element -> {
+  Hook.from(context).useElement((element:ElementOf<T>) -> {
     var cancel = element.events.afterInit.add((element, _) -> {
       FocusContext.from(element).focus(getTargetObject(element));
     });
@@ -18,23 +18,23 @@ function takeFocus<T:Component>(
   });
 }
 
-function watchKeyPressEvents<T:Component>(
-  hook:Hook<T>,
+function useKeyPressEvents<T:Component>(
+  context:Context,
   handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
 ) {
-  hook.useElement(element -> {
-    function onKeyDown(e:KeyboardEvent) {
-      handle(e, element);
-    }
+  function onKeyDown(e:KeyboardEvent) {
+    handle(e, context);
+  }
 
-    hook.useNext(() -> {
-      var el:js.html.Element = element.getObject();
-      el.ownerDocument.addEventListener('keydown', onKeyDown);
-    });
+  var hook = Hook.from(context);
 
-    () -> {
-      var el:js.html.Element = element.getObject();
-      el.ownerDocument.removeEventListener('keydown', onKeyDown);
-    };
+  hook.useNext(() -> {
+    var el:js.html.Element = context.getObject();
+    el.ownerDocument.addEventListener('keydown', onKeyDown);
+  });
+
+  hook.useCleanup(() -> {
+    var el:js.html.Element = context.getObject();
+    el.ownerDocument.removeEventListener('keydown', onKeyDown);
   });
 }

@@ -10,7 +10,7 @@ class Positioned extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    PositionedHooks.usePosition(Hook.from(context));
+    PositionedHooks.usePosition(context);
     #end
     return child;
   }

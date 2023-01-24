@@ -6,8 +6,8 @@ import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
 
-function controlElementAnimation(hook:Hook<Animated>) {
-  hook.useElement(element -> {
+function useAnimation(context:Context) {
+  Hook.from(context).useElement((element:ElementOf<Animated>) -> {
     var currentKeyframes:Null<Keyframes> = null;
     var currentAnimation:Null<Animation> = null;
 

@@ -2,25 +2,24 @@ package eg;
 
 import pine.*;
 
-function usePosition(hook:Hook<Positioned>) {
-  hook.useElement(element -> {
-    var positionElement = createElementPositioner(element);
+function usePosition(context:Context) {
+  var hook:Hook<Positioned> = Hook.from(context);
+  var positionElement = createElementPositioner(context);
 
-    hook.useNext(() -> {
-      js.Browser.window.addEventListener('resize', positionElement);
-      js.Browser.window.addEventListener('scroll', positionElement);
-    
-      var el:js.html.Element = element.getObject();
-      el.style.position = 'fixed';
-      el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
+  hook.useNext(() -> {
+    js.Browser.window.addEventListener('resize', positionElement);
+    js.Browser.window.addEventListener('scroll', positionElement);
   
-      positionElement();
-    });
+    var el:js.html.Element = context.getObject();
+    el.style.position = 'fixed';
+    el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
 
-    () -> {
-      js.Browser.window.removeEventListener('resize', positionElement);
-      js.Browser.window.removeEventListener('scroll', positionElement);
-    }
+    positionElement();
+  });
+
+  hook.useCleanup(() -> {
+    js.Browser.window.removeEventListener('resize', positionElement);
+    js.Browser.window.removeEventListener('scroll', positionElement);
   });
 }
 

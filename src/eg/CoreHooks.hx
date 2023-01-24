@@ -1,6 +1,5 @@
 package eg;
 
-import pine.CoreHooks;
 import js.html.KeyboardEvent;
 import pine.*;
 
@@ -8,7 +7,7 @@ function takeFocus<T:Component>(
   hook:Hook<T>,
   getTargetObject:(element:Element)->js.html.Element
 ) {
-  useElement(hook, element -> {
+  hook.useElement(element -> {
     var cancel = element.events.afterInit.add((element, _) -> {
       FocusContext.from(element).focus(getTargetObject(element));
     });
@@ -23,12 +22,12 @@ function watchKeyPressEvents<T:Component>(
   hook:Hook<T>,
   handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
 ) {
-  useElement(hook, element -> {
+  hook.useElement(element -> {
     function onKeyDown(e:KeyboardEvent) {
       handle(e, element);
     }
 
-    useNext(hook, () -> {
+    hook.useNext(() -> {
       var el:js.html.Element = element.getObject();
       el.ownerDocument.addEventListener('keydown', onKeyDown);
     });

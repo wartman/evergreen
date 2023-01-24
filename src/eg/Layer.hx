@@ -5,7 +5,6 @@ import pine.*;
 import pine.html.*;
 
 using Nuke;
-using pine.CoreHooks;
 
 final defaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
 final defaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);

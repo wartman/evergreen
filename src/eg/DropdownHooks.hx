@@ -1,10 +1,8 @@
 package eg;
 
-import pine.CoreHooks.useNext;
 import haxe.ds.Option;
 import pine.*;
 
-using pine.CoreHooks;
 using pine.core.OptionTools;
 
 function useDropdown(hook:Hook<DropdownPanel>) {

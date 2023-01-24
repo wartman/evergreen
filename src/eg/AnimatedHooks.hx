@@ -5,7 +5,6 @@ import js.html.Element as DomElement;
 import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
-using pine.CoreHooks;
 
 function controlElementAnimation(hook:Hook<Animated>) {
   hook.useElement(element -> {

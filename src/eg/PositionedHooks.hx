@@ -2,8 +2,6 @@ package eg;
 
 import pine.*;
 
-using pine.CoreHooks;
-
 function usePosition(hook:Hook<Positioned>) {
   hook.useElement(element -> {
     var positionElement = createElementPositioner(element);

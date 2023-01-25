@@ -4,7 +4,7 @@ import pine.*;
 
 function usePosition(context:Context) {
   var hook:Hook<Positioned> = Hook.from(context);
-  var positionElement = hook.useState(() -> {
+  var positionElement = hook.useData(() -> {
     var positionElement = createElementPositioner(context);
 
     js.Browser.window.addEventListener('resize', positionElement);
@@ -15,12 +15,13 @@ function usePosition(context:Context) {
     js.Browser.window.removeEventListener('resize', positionElement);
     js.Browser.window.removeEventListener('scroll', positionElement);
   });
-  hook.useNext(() -> {
+  hook.useInit(() -> {
     var el:js.html.Element = context.getObject();
     el.style.position = 'fixed';
     el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
     positionElement();
   });
+  hook.useElement(element -> element.events.afterUpdate.add(_ -> positionElement()));
 }
 
 private function createElementPositioner(element:ElementOf<Positioned>) return function () {

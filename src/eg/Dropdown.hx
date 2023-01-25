@@ -24,13 +24,13 @@ class Dropdown extends AutoComponent {
           }),
           new Scope({
             render: context -> switch dropdown.status {
-              case Open: 
+              case Open:
                 new DropdownPanel({
                   onHide: () -> dropdown.close(),
                   attachment: attachment,
                   child: child
                 });
-              case Closed: 
+              case Closed:
                 null;
             }
           })

@@ -7,24 +7,25 @@ using pine.core.OptionTools;
 
 function useDropdown(element:ElementOf<DropdownPanel>) {
   var hook = Hook.from(element);
-  var controller = hook.useState(() -> createController(element), controller -> {
-    var el:js.html.Element = element.getObject();
-
-    // el.removeEventListener('click', syncClicksWithActiveElement);
-    el.ownerDocument.removeEventListener('click', controller.hide);
-    el.ownerDocument.removeEventListener('keydown', controller.onKeyDown);
-
-    FocusContext.from(element).returnFocus();
-  });
-
-  hook.useNext(() -> {
-    var el:js.html.Element = element.getObject();
-
-    // el.addEventListener('click', syncClicksWithActiveElement);
-    el.ownerDocument.addEventListener('click', controller.hide);
-    el.ownerDocument.addEventListener('keydown', controller.onKeyDown);
-
-    controller.maybeFocusFirst();
+  var controller = hook.useData(() -> createController(element));
+  hook.useElement(element -> {
+    var cancelInit = element.events.afterInit.add((_, _) -> {
+      var el:js.html.Element = element.getObject();
+  
+      // el.addEventListener('click', syncClicksWithActiveElement);
+      el.ownerDocument.addEventListener('click', controller.hide);
+      el.ownerDocument.addEventListener('keydown', controller.onKeyDown);
+  
+      controller.maybeFocusFirst();
+    });
+    () -> {
+      cancelInit();
+      var el:js.html.Element = element.getObject();
+      // el.removeEventListener('click', syncClicksWithActiveElement);
+      el.ownerDocument.removeEventListener('click', controller.hide);
+      el.ownerDocument.removeEventListener('keydown', controller.onKeyDown);
+      FocusContext.from(element).returnFocus();
+    }
   });
 }
 

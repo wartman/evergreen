@@ -1,27 +1,20 @@
 package eg;
 
+import eg.CoreHooks;
 import pine.*;
 
 function usePosition(context:Context) {
   var hook:Hook<Positioned> = Hook.from(context);
-  var positionElement = hook.useData(() -> {
-    var positionElement = createElementPositioner(context);
-
-    js.Browser.window.addEventListener('resize', positionElement);
-    js.Browser.window.addEventListener('scroll', positionElement);
-
-    positionElement;
-  }, positionElement -> {
-    js.Browser.window.removeEventListener('resize', positionElement);
-    js.Browser.window.removeEventListener('scroll', positionElement);
-  });
+  var positionElement = hook.useData(() -> createElementPositioner(context));
+  useWindowEvent(context, 'resize', (_, _) -> positionElement());
+  useWindowEvent(context, 'scroll', (_, _) -> positionElement());
   hook.useInit(() -> {
     var el:js.html.Element = context.getObject();
     el.style.position = 'fixed';
     el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
     positionElement();
   });
-  hook.useElement(element -> element.events.afterUpdate.add(_ -> positionElement()));
+  hook.useUpdate(() -> positionElement());
 }
 
 private function createElementPositioner(element:ElementOf<Positioned>) return function () {

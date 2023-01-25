@@ -1,8 +1,11 @@
 package eg;
 
+import js.Browser;
 import js.html.Event;
 import js.html.KeyboardEvent;
 import pine.*;
+
+// @todo: Make this module isomorphic
 
 function useFocus<T:Component>(
   context:Context,
@@ -19,38 +22,52 @@ function useFocus<T:Component>(
   });
 }
 
-function useKeyPressEvents<T:Component>(
+function useWindowEvent<T:Component, E:Event>(
   context:Context,
-  handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
+  name:String,
+  handle:(e:E, element:ElementOf<T>)->Void
 ) {
   var hook = Hook.from(context);
   var event = hook.useData(
-    () -> { onKeyDown: e -> handle(e, context) }, 
+    () -> { handler: e -> handle(e, context) }, 
     event -> {
-      var el:js.html.Element = context.getObject();
-      el.ownerDocument.removeEventListener('keydown', event.onKeyDown);
+      Browser.window.removeEventListener(name, event.handler);
     }
   );
   hook.useInit(() -> {
-    var el:js.html.Element = context.getObject();
-    el.ownerDocument.addEventListener('keydown', event.onKeyDown);
+    Browser.window.addEventListener(name, event.handler);
   });
 }
 
-function useGlobalClickEvent<T:Component>(
+function useDocumentEvent<T:Component, E:Event>(
   context:Context,
-  handle:(e:Event, element:ElementOf<T>)->Void
+  name:String,
+  handle:(e:E, element:ElementOf<T>)->Void
 ) {
   var hook = Hook.from(context);
   var event = hook.useData(
-    () -> { onClick: e -> handle(e, context) }, 
+    () -> { handler: e -> handle(e, context) }, 
     event -> {
       var el:js.html.Element = context.getObject();
-      el.ownerDocument.removeEventListener('click', event.onClick);
+      el.ownerDocument.removeEventListener(name, event.handler);
     }
   );
   hook.useInit(() -> {
     var el:js.html.Element = context.getObject();
-    el.ownerDocument.addEventListener('click', event.onClick);
+    el.ownerDocument.addEventListener(name, event.handler);
   });
+}
+
+inline function useKeyPressEvents<T:Component>(
+  context:Context,
+  handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
+) {
+  useDocumentEvent(context, 'keydown', handle);
+}
+
+inline function useGlobalClickEvent<T:Component>(
+  context:Context,
+  handle:(e:Event, element:ElementOf<T>)->Void
+) {
+  useDocumentEvent(context, 'click', handle);
 }

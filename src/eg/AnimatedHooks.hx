@@ -6,57 +6,56 @@ import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
 
-function useAnimation(context:Context) {
-  Hook.from(context).useElement((element:ElementOf<Animated>) -> {
-    var currentKeyframes:Null<Keyframes> = null;
-    var currentAnimation:Null<Animation> = null;
+function useAnimation(element:ElementOf<Animated>) {
+  var hook = Hook.from(element);
+  var animation = hook.useData(
+    () -> createAnimationController(), 
+    animation -> animation.dispose()
+  );
+  hook.useInit(() -> animation.registerAnimation(element, true));
+  hook.useUpdate(() -> animation.registerAnimation(element, false));
+  hook.useCleanup(() -> if (element.component.onDispose != null) {
+    element.component.onDispose(element);
+  });
+}
 
-    function registerAnimation(element:ElementOf<Animated>, first:Bool = false) {
-      var animated = element.component;
-      var el:DomElement = element.getObject();
-      var duration = if (first && animated.dontAnimateInitial) 0 else animated.duration;
-      var keyframes = animated.keyframes;
+function createAnimationController() {
+  var currentKeyframes:Null<Keyframes> = null;
+  var currentAnimation:Null<Animation> = null;
 
-      if (animated.dontRepeatCurrentAnimation) {
-        if (currentKeyframes != null && currentKeyframes.equals(keyframes)) {
-          return;
-        }
+  function registerAnimation(element:ElementOf<Animated>, first:Bool = false) {
+    var animated = element.component;
+    var el:DomElement = element.getObject();
+    var duration = if (first && animated.dontAnimateInitial) 0 else animated.duration;
+    var keyframes = animated.keyframes;
+
+    if (animated.dontRepeatCurrentAnimation) {
+      if (currentKeyframes != null && currentKeyframes.equals(keyframes)) {
+        return;
       }
-
-      currentKeyframes = keyframes;
-      
-      if (currentAnimation != null) {
-        currentAnimation.cancel();
-        currentAnimation = null;
-      }
-      
-      function onFinished() {
-        currentAnimation = null;
-        if (animated.onFinished != null) animated.onFinished(element);
-      }
-
-      currentAnimation = el.registerAnimations(keyframes.create(element), {
-        duration: duration,
-        easing: animated.easing,
-        iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
-      }, onFinished);
     }
 
-    var links = [
-      element.events.afterInit.add((element, _) -> registerAnimation(element, true)),
-      element.events.afterUpdate.add(element -> registerAnimation(element, false)),
-      element.events.beforeDispose.add(_ -> if (element.component.onDispose != null) {
-        element.component.onDispose(element);
-      })
-    ];
+    currentKeyframes = keyframes;
+    
+    if (currentAnimation != null) {
+      currentAnimation.cancel();
+      currentAnimation = null;
+    }
+    
+    function onFinished() {
+      currentAnimation = null;
+      if (animated.onFinished != null) animated.onFinished(element);
+    }
 
-    () -> {
-      if (currentAnimation != null) {
-        currentAnimation.cancel();
-        currentAnimation = null;
-      }
-      currentKeyframes = null; 
-      for (cancel in links) cancel();
-    };
-  });
+    currentAnimation = el.registerAnimations(keyframes.create(element), {
+      duration: duration,
+      easing: animated.easing,
+      iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
+    }, onFinished);
+  }
+
+  return {
+    registerAnimation: registerAnimation,
+    dispose: () -> if (currentAnimation != null) currentAnimation.cancel()
+  };
 }

@@ -1,5 +1,6 @@
 package eg;
 
+import eg.CoreHooks;
 import haxe.ds.Option;
 import pine.*;
 
@@ -8,25 +9,11 @@ using pine.core.OptionTools;
 function useDropdown(element:ElementOf<DropdownPanel>) {
   var hook = Hook.from(element);
   var controller = hook.useData(() -> createController(element));
-  hook.useElement(element -> {
-    var cancelInit = element.events.afterInit.add((_, _) -> {
-      var el:js.html.Element = element.getObject();
   
-      // el.addEventListener('click', syncClicksWithActiveElement);
-      el.ownerDocument.addEventListener('click', controller.hide);
-      el.ownerDocument.addEventListener('keydown', controller.onKeyDown);
-  
-      controller.maybeFocusFirst();
-    });
-    () -> {
-      cancelInit();
-      var el:js.html.Element = element.getObject();
-      // el.removeEventListener('click', syncClicksWithActiveElement);
-      el.ownerDocument.removeEventListener('click', controller.hide);
-      el.ownerDocument.removeEventListener('keydown', controller.onKeyDown);
-      FocusContext.from(element).returnFocus();
-    }
-  });
+  useKeyPressEvents(element, (e, _) -> controller.onKeyDown(e));
+  useGlobalClickEvent(element, (e, _) -> controller.hide(e));
+  hook.useInit(() -> controller.maybeFocusFirst());
+  hook.useCleanup(() -> FocusContext.from(element).returnFocus());
 }
 
 function createController(element:ElementOf<DropdownPanel>):{

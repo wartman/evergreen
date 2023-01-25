@@ -1,5 +1,6 @@
 package eg;
 
+import js.html.Event;
 import js.html.KeyboardEvent;
 import pine.*;
 
@@ -33,5 +34,23 @@ function useKeyPressEvents<T:Component>(
   hook.useInit(() -> {
     var el:js.html.Element = context.getObject();
     el.ownerDocument.addEventListener('keydown', event.onKeyDown);
+  });
+}
+
+function useGlobalClickEvent<T:Component>(
+  context:Context,
+  handle:(e:Event, element:ElementOf<T>)->Void
+) {
+  var hook = Hook.from(context);
+  var event = hook.useData(
+    () -> { onClick: e -> handle(e, context) }, 
+    event -> {
+      var el:js.html.Element = context.getObject();
+      el.ownerDocument.removeEventListener('click', event.onClick);
+    }
+  );
+  hook.useInit(() -> {
+    var el:js.html.Element = context.getObject();
+    el.ownerDocument.addEventListener('click', event.onClick);
   });
 }

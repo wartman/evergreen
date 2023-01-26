@@ -28,7 +28,7 @@ function useWindowEvent<T:Component, E:Event>(
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
   var hook = Hook.from(context);
-  var event = hook.useData(
+  var event = hook.useMemo(
     () -> { handler: e -> handle(e, context) }, 
     event -> {
       Browser.window.removeEventListener(name, event.handler);
@@ -45,7 +45,7 @@ function useDocumentEvent<T:Component, E:Event>(
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
   var hook = Hook.from(context);
-  var event = hook.useData(
+  var event = hook.useMemo(
     () -> { handler: e -> handle(e, context) }, 
     event -> {
       var el:js.html.Element = context.getObject();

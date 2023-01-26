@@ -8,7 +8,7 @@ using pine.core.OptionTools;
 
 function useDropdown(element:ElementOf<DropdownPanel>) {
   var hook = Hook.from(element);
-  var controller = hook.useData(() -> createController(element));
+  var controller = hook.useMemo(() -> createController(element));
   
   useKeyPressEvents(element, (e, _) -> controller.onKeyDown(e));
   useGlobalClickEvent(element, (e, _) -> controller.hide(e));

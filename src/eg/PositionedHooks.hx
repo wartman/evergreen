@@ -5,7 +5,7 @@ import pine.*;
 
 function usePosition(context:Context) {
   var hook:Hook<Positioned> = Hook.from(context);
-  var positionElement = hook.useData(() -> createElementPositioner(context));
+  var positionElement = hook.useMemo(() -> createElementPositioner(context));
   useWindowEvent(context, 'resize', (_, _) -> positionElement());
   useWindowEvent(context, 'scroll', (_, _) -> positionElement());
   hook.useInit(() -> {

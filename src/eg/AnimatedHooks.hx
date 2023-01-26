@@ -8,7 +8,7 @@ using eg.internal.DomAnimationTools;
 
 function useAnimation(element:ElementOf<Animated>) {
   var hook = Hook.from(element);
-  var animation = hook.useData(
+  var animation = hook.useMemo(
     () -> createAnimationController(), 
     animation -> animation.dispose()
   );

@@ -1,12 +1,11 @@
 package eg;
 
 import pine.*;
-import pine.html.*;
 
 class Positioned extends AutoComponent {
   public final getTarget:()->Dynamic;
   public final attachment:PositionedAttachment;
-  final child:HtmlChild;
+  final child:Child;
 
   function render(context:Context) {
     #if (js && !nodejs)

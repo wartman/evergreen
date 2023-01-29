@@ -1,12 +1,11 @@
 package eg;
 
 import pine.*;
-import pine.html.*;
 
 using Nuke;
 
 class Popover extends AutoComponent {
-  final child:HtmlChild;
+  final child:Child;
   final styles:ClassName = null;
   final attachment:PositionedAttachment;
   final getTarget:Null<()->Dynamic> = null;

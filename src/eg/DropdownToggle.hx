@@ -1,10 +1,9 @@
 package eg;
 
 import pine.*;
-import pine.html.*;
 
 class DropdownToggle extends AutoComponent {
-  final child:HtmlChild;
+  final child:Child;
   
   function render(context:Context) {
     return child;

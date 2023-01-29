@@ -10,7 +10,7 @@ class Modal extends AutoComponent {
   final styles:ClassName = null;
   final layerStyles:ClassName = null;
   final onHide:()->Void;
-  final children:HtmlChildren;
+  final children:Children;
   final hideOnEscape:Bool = true;
 
   public function render(context:Context):Component {

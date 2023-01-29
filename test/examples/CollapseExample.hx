@@ -25,7 +25,7 @@ class CollapseExample extends AutoComponent {
 }
 
 class ExampleCollapseHeader extends AutoComponent {
-  final child:HtmlChild;
+  final child:Child;
 
   function render(context:Context) {
     var collapse = CollapseContext.from(context);
@@ -38,8 +38,8 @@ class ExampleCollapseHeader extends AutoComponent {
         // where you have a chevron icon rotate or otherwise
         // indicate a collapsed/expanded status.
         render: _ -> switch collapse.status {
-          case Collapsed: new Fragment({ children: [ child, (' +':HtmlChild) ] });
-          case Expanded: new Fragment({ children: [ child, (' -':HtmlChild) ] });
+          case Collapsed: new Fragment({ children: [ child, new Text(' +') ] });
+          case Expanded: new Fragment({ children: [ child, new Text(' -') ] });
         }
       })
     });
@@ -47,7 +47,7 @@ class ExampleCollapseHeader extends AutoComponent {
 }
 
 class ExampleCollapseBody extends AutoComponent {
-  final children:HtmlChildren;
+  final children:Children;
 
   function render(context:Context) {
     return new CollapseItem({

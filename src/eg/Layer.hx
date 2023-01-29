@@ -15,7 +15,7 @@ class Layer extends AutoComponent {
   final onHide:()->Void;
   final hideOnClick:Bool = true;
   final hideOnEscape:Bool = true;
-  final child:HtmlChild;
+  final child:Child;
   final transitionSpeed:Int = 150;
   final styles:ClassName = null;
   final showAnimation:Keyframes = defaultShowAnimation;

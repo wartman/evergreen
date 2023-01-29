@@ -1,7 +1,6 @@
 package eg;
 
 import pine.*;
-import pine.html.*;
 import eg.DropdownContext;
 
 using Nuke;
@@ -9,8 +8,8 @@ using pine.core.OptionTools;
 
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };
-  final toggle:HtmlChild;
-  final child:HtmlChild;
+  final toggle:Child;
+  final child:Child;
   final status:DropdownStatus = Closed;
 
   function render(context:Context) {

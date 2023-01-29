@@ -1,14 +1,13 @@
 package eg;
 
 import pine.*;
-import pine.html.*;
 
 using pine.core.OptionTools;
 
 class DropdownPanel extends AutoComponent {
   public final onHide:()->Void;
   final attachment:PositionedAttachment;
-  final child:HtmlChild;
+  final child:Child;
 
   function render(context:Context) {
     #if (js && !nodejs)

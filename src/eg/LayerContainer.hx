@@ -1,8 +1,7 @@
 package eg;
 
-import pine.*;
-import pine.html.*;
 import eg.Layer;
+import pine.*;
 
 using Nuke;
 using pine.core.OptionTools;
@@ -12,7 +11,7 @@ using eg.CoreHooks;
 
 class LayerContainer extends AutoComponent {
   public final hideOnEscape:Bool;
-  final child:HtmlChild;
+  final child:Child;
 
   function render(context:Context) {
     #if (js && !nodejs)

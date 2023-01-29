@@ -56,7 +56,7 @@ function generate(nodes:Xml, isSvg:Bool = false, pos:Position):Array<Expr> {
       } });
     case PCData if (!isSvg):
       var text = node.nodeValue;
-      macro ($v{text}:pine.html.HtmlChild);
+      macro ($v{text}:pine.html.Child);
     default: null;
   } ].filter(n -> n != null);
 }

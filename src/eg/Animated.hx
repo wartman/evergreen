@@ -12,7 +12,7 @@ class Animated extends AutoComponent {
   public final easing:String = 'linear';
   public final onFinished:(context:Context)->Void = null;
   public final onDispose:(context:Context)->Void = null;
-  final child:HtmlChild;
+  final child:Child;
 
   function render(context:Context) {
     #if (js && !nodejs)

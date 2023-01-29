@@ -53,7 +53,7 @@ class DropdownExample extends AutoComponent {
 }
 
 class ExampleDropdownItem extends AutoComponent {
-  final child:HtmlChild;
+  final child:Child;
   final onClick:EventListener;
 
   function render(context:Context) {

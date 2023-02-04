@@ -22,7 +22,10 @@ class Layer extends AutoComponent {
   final hideAnimation:Keyframes = defaultHideAnimation;
 
   public function render(context:Context):Component {
-    Hook.from(context).useInit(() -> if (beforeShow != null) beforeShow());
+    Hook.from(context).useInit(() -> {
+      if (beforeShow != null) beforeShow();
+      null;
+    });
 
     return new LayerContextProvider({
       create: () -> new LayerContext({}),

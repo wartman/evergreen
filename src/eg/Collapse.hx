@@ -1,8 +1,7 @@
 package eg;
 
-import pine.*;
-import pine.html.*;
 import eg.CollapseContext;
+import pine.*;
 
 using pine.core.OptionTools;
 

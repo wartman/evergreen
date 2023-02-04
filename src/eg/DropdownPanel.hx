@@ -1,6 +1,7 @@
 package eg;
 
 import pine.*;
+import haxe.ds.Option;
 
 using pine.core.OptionTools;
 
@@ -11,8 +12,16 @@ class DropdownPanel extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    DropdownHooks.useDropdown(context);
+    var hook = Hook.from(context);
+    var controller = hook.useMemo(() -> createController(context));
+    CoreHooks.useKeyPressEvents(context, (e, _) -> controller.onKeyDown(e));
+    CoreHooks.useGlobalClickEvent(context, (e, _) -> controller.hide(e));
+    hook.useInit(() -> {
+      controller.maybeFocusFirst();
+      return () -> FocusContext.from(context).returnFocus();
+    });
     #end
+
     return new Popover({
       getTarget: () -> context
         .queryAncestors()
@@ -27,3 +36,88 @@ class DropdownPanel extends AutoComponent {
     });
   }
 }
+
+#if (js && !nodejs)
+private function createController(element:ElementOf<DropdownPanel>):{
+  hide:(e:js.html.Event)->Void,
+  onKeyDown:(e:js.html.KeyboardEvent)->Void,
+  maybeFocusFirst:()->Void
+} {
+  var current:Null<Element> = null;
+
+  function hide(e:js.html.Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    element.component.onHide();
+  }
+
+  function getNextFocusedChild(offset:Int):Option<Element> {
+    var items = element.queryChildren().filterOfType(DropdownItem, true);
+    var index = Math.ceil(items.indexOf(current) + offset);
+    var item = items[index];
+    if (item != null) {
+      current = item;
+      return Some(current);
+    }
+
+    return None;
+  }
+
+  function maybeFocusFirst() {
+    switch getNextFocusedChild(1) {
+      case Some(item):
+        var el:js.html.Element = item.getObject();
+        FocusContext.from(element).focus(el);
+      case None:
+    }
+  }
+
+  function focusNext(e:js.html.KeyboardEvent, hideIfLast:Bool = false) {
+    e.preventDefault();
+    switch getNextFocusedChild(1) {
+      case Some(item): 
+        (item.getObject():js.html.Element).focus();
+      case None if (hideIfLast): 
+        hide(e);
+      case None:
+    }
+  }
+
+  function focusPrevious(e:js.html.KeyboardEvent, hideIfFirst:Bool = false) {
+    e.preventDefault();
+    switch getNextFocusedChild(-1) {
+      case Some(item): 
+        (item.getObject():js.html.Element).focus();
+      case None if (hideIfFirst): 
+        hide(e);
+      case None:
+    }
+  }
+
+  function onKeyDown(event:js.html.KeyboardEvent) {
+    if (element.status == Building || element.status == Disposed) return;
+
+    switch event.key {
+      case 'Escape': 
+        hide(event);
+      case 'ArrowUp':
+        focusPrevious(event);
+      case 'ArrowDown':
+        focusNext(event);
+      case 'Tab' if (event.getModifierState('Shift')):
+        focusPrevious(event, true);
+      case 'Tab':
+        focusNext(event, true);
+      case 'Home': // ??
+        maybeFocusFirst();
+      default:
+    }
+  }
+
+  return {
+    hide: hide,
+    onKeyDown: onKeyDown,
+    maybeFocusFirst: maybeFocusFirst
+  };
+}
+#end

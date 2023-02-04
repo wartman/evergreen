@@ -9,16 +9,12 @@ import pine.*;
 
 function useFocus<T:Component>(
   context:Context,
-  getTargetObject:(element:Element)->js.html.Element
+  getTargetObject:(element:ElementOf<T>)->js.html.Element
 ) {
-  Hook.from(context).useElement((element:ElementOf<T>) -> {
-    var cancel = element.events.afterInit.add((element, _) -> {
-      FocusContext.from(element).focus(getTargetObject(element));
-    });
-    () -> {
-      cancel();
-      FocusContext.from(element).returnFocus();
-    }
+  var hook = Hook.from(context);
+  hook.useInit(() -> {
+    FocusContext.from(context).focus(getTargetObject(context));
+    return () -> FocusContext.from(context).returnFocus();
   });
 }
 
@@ -27,15 +23,10 @@ function useWindowEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
-  var hook = Hook.from(context);
-  var event = hook.useMemo(
-    () -> { handler: e -> handle(e, context) }, 
-    event -> {
-      Browser.window.removeEventListener(name, event.handler);
-    }
-  );
-  hook.useInit(() -> {
-    Browser.window.addEventListener(name, event.handler);
+  Hook.from(context).useInit(() -> {
+    var handler = e -> handle(e, context);
+    Browser.window.addEventListener(name, handler);
+    return () -> Browser.window.removeEventListener(name, handler);
   });
 }
 
@@ -44,17 +35,12 @@ function useDocumentEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
-  var hook = Hook.from(context);
-  var event = hook.useMemo(
-    () -> { handler: e -> handle(e, context) }, 
-    event -> {
-      var el:js.html.Element = context.getObject();
-      el.ownerDocument.removeEventListener(name, event.handler);
-    }
-  );
-  hook.useInit(() -> {
+  Hook.from(context).useInit(() -> {
+    var handler = e -> handle(e, context);
     var el:js.html.Element = context.getObject();
-    el.ownerDocument.addEventListener(name, event.handler);
+    var document = el.ownerDocument;
+    document.addEventListener(name, handler);
+    return () -> document.removeEventListener(name, handler);
   });
 }
 

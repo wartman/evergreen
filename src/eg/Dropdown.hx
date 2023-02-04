@@ -18,9 +18,7 @@ class Dropdown extends AutoComponent {
       dispose: dropdown -> dropdown.dispose(),
       render: dropdown -> new DropdownContainer({
         children: [
-          new DropdownToggle({ 
-            child: toggle 
-          }),
+          new DropdownToggle({ child: toggle }),
           new Scope({
             render: context -> switch dropdown.status {
               case Open:

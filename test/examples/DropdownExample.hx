@@ -67,7 +67,7 @@ class ExampleDropdownItem extends AutoComponent {
         // it earlier, around `Html<'li'>`), *and* that component
         // should create a focusable html element (that is, an
         // `<a>` element with a "href", a `<button>`, etc). Note that
-        // the Dropdown will NOT be accessable if you don't 
+        // the Dropdown will NOT be accessible if you don't 
         // use DropdownItems.
         new DropdownItem({
           child: new Html<'a'>({

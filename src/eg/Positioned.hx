@@ -2,6 +2,9 @@ package eg;
 
 import pine.*;
 
+using pine.Hooks;
+using eg.CoreHooks;
+
 class Positioned extends AutoComponent {
   public final getTarget:()->Dynamic;
   public final attachment:PositionedAttachment;
@@ -9,18 +12,17 @@ class Positioned extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var hook:Hook<Positioned> = Hook.from(context);
-    var positionElement = hook.useMemo(() -> createElementPositioner(context));
-    CoreHooks.useWindowEvent(context, 'resize', (_, _) -> positionElement());
-    CoreHooks.useWindowEvent(context, 'scroll', (_, _) -> positionElement());
-    hook.useInit(() -> {
+    var positionElement = context.useMemo(() -> createElementPositioner(context));
+    context.useWindowEvent('resize', (_, _) -> positionElement());
+    context.useWindowEvent('scroll', (_, _) -> positionElement());
+    context.useInit(() -> {
       var el:js.html.Element = context.getObject();
       el.style.position = 'fixed';
       el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
       positionElement();
       null;
     });
-    hook.useUpdate(() -> {
+    context.useUpdate(() -> {
       positionElement();
       null;
     });

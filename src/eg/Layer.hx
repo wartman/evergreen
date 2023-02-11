@@ -5,9 +5,10 @@ import pine.*;
 import pine.html.*;
 
 using Nuke;
+using pine.Hooks;
 
-final defaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
-final defaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
+final DefaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
+final DefaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
 
 class Layer extends AutoComponent {
   final beforeShow:()->Void = null;
@@ -18,11 +19,11 @@ class Layer extends AutoComponent {
   final child:Child;
   final transitionSpeed:Int = 150;
   final styles:ClassName = null;
-  final showAnimation:Keyframes = defaultShowAnimation;
-  final hideAnimation:Keyframes = defaultHideAnimation;
+  final showAnimation:Keyframes = DefaultShowAnimation;
+  final hideAnimation:Keyframes = DefaultHideAnimation;
 
   public function render(context:Context):Component {
-    Hook.from(context).useInit(() -> {
+    context.useInit(() -> {
       if (beforeShow != null) beforeShow();
       null;
     });

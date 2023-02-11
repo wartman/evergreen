@@ -7,6 +7,7 @@ import js.html.Element as DomElement;
 import js.html.Animation;
 
 using eg.internal.DomAnimationTools;
+using pine.Hooks;
 #end
 
 class Animated extends AutoComponent {
@@ -22,17 +23,16 @@ class Animated extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var hook = Hook.from(context);
-    var animation = hook.useMemo(createAnimationController, animation -> animation.dispose());
-    hook.useInit(() -> {
+    var animation = context.useMemo(createAnimationController, animation -> animation.dispose());
+    context.useInit(() -> {
       animation.registerAnimation(context, true);
       null;
     });
-    hook.useUpdate(() -> {
+    context.useUpdate(() -> {
       animation.registerAnimation(context, false);
       null;
     });
-    hook.useCleanup(() -> {
+    context.useCleanup(() -> {
       var element:ElementOf<Animated> = cast context;
       if (element.component.onDispose != null) {
         element.component.onDispose(context);

@@ -5,14 +5,15 @@ import js.html.Event;
 import js.html.KeyboardEvent;
 import pine.*;
 
+using pine.Hooks;
+
 // @todo: Make this module isomorphic
 
 function useFocus<T:Component>(
   context:Context,
   getTargetObject:(element:ElementOf<T>)->js.html.Element
 ) {
-  var hook = Hook.from(context);
-  hook.useInit(() -> {
+  context.useInit(() -> {
     FocusContext.from(context).focus(getTargetObject(context));
     return () -> FocusContext.from(context).returnFocus();
   });
@@ -23,7 +24,7 @@ function useWindowEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
-  Hook.from(context).useInit(() -> {
+  context.useInit(() -> {
     var handler = e -> handle(e, context);
     Browser.window.addEventListener(name, handler);
     return () -> Browser.window.removeEventListener(name, handler);
@@ -35,7 +36,7 @@ function useDocumentEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
-  Hook.from(context).useInit(() -> {
+  context.useInit(() -> {
     var handler = e -> handle(e, context);
     var el:js.html.Element = context.getObject();
     var document = el.ownerDocument;

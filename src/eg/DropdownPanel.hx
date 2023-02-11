@@ -4,6 +4,8 @@ import pine.*;
 import haxe.ds.Option;
 
 using pine.core.OptionTools;
+using pine.Hooks;
+using eg.CoreHooks;
 
 class DropdownPanel extends AutoComponent {
   public final onHide:()->Void;
@@ -12,11 +14,11 @@ class DropdownPanel extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var hook = Hook.from(context);
-    var controller = hook.useMemo(() -> createController(context));
-    CoreHooks.useKeyPressEvents(context, (e, _) -> controller.onKeyDown(e));
-    CoreHooks.useGlobalClickEvent(context, (e, _) -> controller.hide(e));
-    hook.useInit(() -> {
+    // var hook = Hook.from(context);
+    var controller = context.useMemo(() -> createController(context));
+    context.useKeyPressEvents((e, _) -> controller.onKeyDown(e));
+    context.useGlobalClickEvent((e, _) -> controller.hide(e));
+    context.useInit(() -> {
       controller.maybeFocusFirst();
       return () -> FocusContext.from(context).returnFocus();
     });

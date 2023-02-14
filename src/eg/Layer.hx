@@ -11,7 +11,6 @@ final DefaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, 
 final DefaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
 
 class Layer extends AutoComponent {
-  final beforeShow:()->Void = null;
   final onShow:()->Void = null;
   final onHide:()->Void;
   final hideOnClick:Bool = true;
@@ -23,11 +22,6 @@ class Layer extends AutoComponent {
   final hideAnimation:Keyframes = DefaultHideAnimation;
 
   public function render(context:Context):Component {
-    context.useInit(() -> {
-      if (beforeShow != null) beforeShow();
-      null;
-    });
-
     return new LayerContextProvider({
       create: () -> new LayerContext({}),
       dispose: layer -> layer.dispose(),
@@ -35,6 +29,9 @@ class Layer extends AutoComponent {
         render: context -> {
           var status = layer.status;
           var body = new Html<'div'>({
+            // @todo: Consider if we actually want this dependency
+            // on Nuke in here. It might be OK if the layer has 
+            // no classes.
             className: ClassName.ofArray([
               'eg-layer',
               styles,

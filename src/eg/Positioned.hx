@@ -12,7 +12,7 @@ class Positioned extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var positionElement = context.useMemo(() -> createElementPositioner(context));
+    var positionElement = useElementPositioner(context);
     context.useWindowEvent('resize', (_, _) -> positionElement());
     context.useWindowEvent('scroll', (_, _) -> positionElement());
     context.useInit(() -> {
@@ -32,6 +32,10 @@ class Positioned extends AutoComponent {
 }
 
 #if (js && !nodejs)
+private inline function useElementPositioner(element:ElementOf<Positioned>) {
+  return element.useMemo(() -> createElementPositioner(element));
+}
+
 private function createElementPositioner(element:ElementOf<Positioned>) return function () {
   var positioned = element.component;
   var el:js.html.Element = element.getObject();

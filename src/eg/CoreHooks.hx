@@ -58,3 +58,21 @@ inline function useGlobalClickEvent<T:Component>(
 ) {
   useDocumentEvent(context, 'click', handle);
 }
+
+function useLockedDocumentBody(context:Context) {
+  #if (js && !nodejs)
+  context.useInit(() -> {
+    var body = js.Browser.document.body;
+    var beforeWidth = body.offsetWidth;
+    // @todo: This method is fragile if we ever want to do something else
+    // with the `style` tag OR if more than one Modal is active.
+    body.setAttribute('style', 'overflow:hidden;');
+    var afterWidth = body.offsetWidth;
+    var offset = afterWidth - beforeWidth;
+    if (offset > 0) {
+      body.setAttribute('style', 'overflow:hidden;padding-right:${offset}px');
+    }
+    return () -> body.removeAttribute('style');
+  });
+  #end
+}

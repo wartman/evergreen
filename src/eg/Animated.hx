@@ -3,10 +3,13 @@ package eg;
 import pine.*;
 
 #if (js && !nodejs)
+import js.Browser.window;
 import js.html.Element as DomElement;
 import js.html.Animation;
+import js.html.Element;
+import js.lib.Promise;
 
-using eg.internal.DomAnimationTools;
+using Reflect;
 using pine.Hooks;
 #end
 
@@ -45,6 +48,12 @@ class Animated extends AutoComponent {
 }
 
 #if (js && !nodejs)
+private typedef AnimationOptions = {
+  public final duration:Int;
+  public final ?easing:String;
+  public final ?iterations:Float;
+}
+
 private function createAnimationController() {
   var currentKeyframes:Null<Keyframes> = null;
   var currentAnimation:Null<Animation> = null;
@@ -73,7 +82,7 @@ private function createAnimationController() {
       if (animated.onFinished != null) animated.onFinished(element);
     }
 
-    currentAnimation = el.registerAnimations(keyframes.create(element), {
+    currentAnimation = registerAnimations(el, keyframes.create(element), {
       duration: duration,
       easing: animated.easing,
       iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
@@ -85,4 +94,35 @@ private function createAnimationController() {
     dispose: () -> if (currentAnimation != null) currentAnimation.cancel()
   };
 }
+
+private function registerAnimations(el:Element, keyframes:Array<Dynamic>, options:AnimationOptions, onFinished:()->Void):Animation {
+  var duration = prefersReducedMotion() ? 0 : options.duration;
+  var animation = el.animate(keyframes, { 
+    duration: duration,
+    easing: options.easing,
+    iterations: options.iterations
+  });
+  
+  // @todo: I don't think we want to trigger finished if we're canceling.
+  // animation.addEventListener('cancel', onFinished, { once: true });
+  animation.addEventListener('finish', onFinished, { once: true });
+
+  return animation;
+}
+
+private function stopAnimations(el:Element, onFinished:()->Void) {
+  Promise.all(el.getAnimations().map(animation -> {
+    return new Promise((res, _) -> {
+      animation.addEventListener('cancel', () -> res(null), { once: true });
+      animation.addEventListener('finish', () -> res(null), { once: true });
+      animation.cancel();
+    });
+  })).finally(onFinished);
+}
+
+private function prefersReducedMotion() {
+  var query = window.matchMedia('(prefers-reduced-motion: reduce)');
+  return query.matches;
+}
+
 #end

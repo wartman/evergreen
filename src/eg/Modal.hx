@@ -1,10 +1,10 @@
 package eg;
 
-import eg.internal.DomTools;
 import pine.*;
 import pine.html.*;
 
 using Nuke;
+using eg.CoreHooks;
 
 class Modal extends AutoComponent {
   final styles:ClassName = null;
@@ -14,18 +14,14 @@ class Modal extends AutoComponent {
   final hideOnEscape:Bool = true;
 
   public function render(context:Context):Component {
+    context.useLockedDocumentBody();
+
     return new Portal({
       target: PortalContext.from(context).getTarget(),
       child: new Layer({
         styles: layerStyles,
         hideOnEscape: hideOnEscape,
-        beforeShow: () -> {
-          lockBody();
-        },
-        onHide: () -> {
-          unlockBody();
-          onHide();
-        },
+        onHide: onHide,
         child: new Html<'div'>({
           className: ClassName.ofArray([
             'eg-modal-container',

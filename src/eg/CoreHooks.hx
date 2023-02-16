@@ -1,22 +1,20 @@
 package eg;
 
-import js.Browser;
-import js.html.Event;
-import js.html.KeyboardEvent;
 import pine.*;
+import pine.html.HtmlEvents;
 
 using pine.Hooks;
 
-// @todo: Make this module isomorphic
-
 function useFocus<T:Component>(
   context:Context,
-  getTargetObject:(element:ElementOf<T>)->js.html.Element
+  getTargetObject:(element:ElementOf<T>)->Dynamic
 ) {
+  #if (js && !nodejs)
   context.useInit(() -> {
     FocusContext.from(context).focus(getTargetObject(context));
     return () -> FocusContext.from(context).returnFocus();
   });
+  #end
 }
 
 function useWindowEvent<T:Component, E:Event>(
@@ -24,11 +22,14 @@ function useWindowEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
+  #if (js && !nodejs)
   context.useInit(() -> {
     var handler = e -> handle(e, context);
-    Browser.window.addEventListener(name, handler);
-    return () -> Browser.window.removeEventListener(name, handler);
+    var window = js.Browser.window;
+    window.addEventListener(name, handler);
+    return () -> window.removeEventListener(name, handler);
   });
+  #end
 }
 
 function useDocumentEvent<T:Component, E:Event>(
@@ -36,6 +37,7 @@ function useDocumentEvent<T:Component, E:Event>(
   name:String,
   handle:(e:E, element:ElementOf<T>)->Void
 ) {
+  #if (js && !nodejs)
   context.useInit(() -> {
     var handler = e -> handle(e, context);
     var el:js.html.Element = context.getObject();
@@ -43,11 +45,12 @@ function useDocumentEvent<T:Component, E:Event>(
     document.addEventListener(name, handler);
     return () -> document.removeEventListener(name, handler);
   });
+  #end
 }
 
 inline function useKeyPressEvents<T:Component>(
   context:Context,
-  handle:(e:KeyboardEvent, element:ElementOf<T>)->Void
+  handle:(e:js.html.KeyboardEvent, element:ElementOf<T>)->Void
 ) {
   useDocumentEvent(context, 'keydown', handle);
 }
@@ -65,7 +68,7 @@ function useLockedDocumentBody(context:Context) {
     var body = js.Browser.document.body;
     var beforeWidth = body.offsetWidth;
     // @todo: This method is fragile if we ever want to do something else
-    // with the `style` tag OR if more than one Modal is active.
+    // with the `style` tag OR if more than one Layer is active.
     body.setAttribute('style', 'overflow:hidden;');
     var afterWidth = body.offsetWidth;
     var offset = afterWidth - beforeWidth;

@@ -9,6 +9,8 @@ enum LayerContextStatus {
   Hiding;
 }
 
+// @todo: Replace this with a LayerManager or something -- some way to
+// handle multiple layers being active at once.
 @:allow(eg)
 class LayerContext implements Record {
   public static function from(context:Context) {

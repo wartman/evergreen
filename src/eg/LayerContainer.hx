@@ -5,9 +5,6 @@ import pine.*;
 
 using Nuke;
 using pine.core.OptionTools;
-#if (js && !nodejs)
-using eg.CoreHooks;
-#end
 
 class LayerContainer extends AutoComponent {
   public final hideOnEscape:Bool;
@@ -15,19 +12,35 @@ class LayerContainer extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    context.useFocus(element -> element
-      .queryChildren()
-      .findOfType(LayerTarget, true)
-      .orThrow('Expected a LayerTarget')
-      .getObject()
-    );
-    context.useKeyPressEvents((e, element:ElementOf<LayerContainer>) -> switch e.key {
-      case 'Escape' if (element.component.hideOnEscape):
-        e.preventDefault();
-        LayerContext.from(element).hide();
-      default:
+    return new Proxy<LayerContainer>({
+      target: context,
+      setup: element -> {
+        var document = js.Browser.document;
+
+        function onEscape(e:js.html.KeyboardEvent)  switch e.key {
+          case 'Escape' if (element.component.hideOnEscape):
+            e.preventDefault();
+            LayerContext.from(context).hide();
+          default:
+        }
+        
+        element.onInit(() -> {
+          document.addEventListener('keydown', onEscape);
+          FocusContext.from(context).focus(element
+            .queryChildren()
+            .findOfType(LayerTarget, true)
+            .orThrow('Expected a LayerTarget')
+            .getObject());
+          return () -> {
+            document.removeEventListener('keydown', onEscape);
+            FocusContext.from(context).returnFocus();
+          }
+        });
+      },
+      child: child
     });
-    #end
+    #else
     return child;
+    #end
   }
 }

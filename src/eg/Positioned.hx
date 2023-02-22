@@ -2,9 +2,6 @@ package eg;
 
 import pine.*;
 
-using pine.Hooks;
-using eg.CoreHooks;
-
 class Positioned extends AutoComponent {
   public final getTarget:()->Dynamic;
   public final attachment:PositionedAttachment;
@@ -12,30 +9,41 @@ class Positioned extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var positionElement = useElementPositioner(context);
-    context.useWindowEvent('resize', (_, _) -> positionElement());
-    context.useWindowEvent('scroll', (_, _) -> positionElement());
-    context.useInit(() -> {
-      var el:js.html.Element = context.getObject();
-      el.style.position = 'fixed';
-      el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
-      positionElement();
-      null;
+    return new Proxy<Positioned>({
+      target: context,
+      setup: element -> {
+        var positionElement = createElementPositioner(element);
+        var window = js.Browser.window;
+
+        element.onInit(() -> {
+          var el:js.html.Element = context.getObject();
+          el.style.position = 'fixed';
+          el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
+
+          window.addEventListener('resize', positionElement);
+          window.addEventListener('scroll', positionElement);
+
+          positionElement();
+          
+          return () -> {
+            window.removeEventListener('resize', positionElement);
+            window.removeEventListener('scroll', positionElement);
+          }
+        });
+        element.onUpdate(() -> {
+          positionElement();
+          return null;
+        }, { skipInit: true });
+      },
+      child: child
     });
-    context.useUpdate(() -> {
-      positionElement();
-      null;
-    });
-    #end
+    #else
     return child;
+    #end
   }
 }
 
 #if (js && !nodejs)
-private inline function useElementPositioner(element:ElementOf<Positioned>) {
-  return element.useMemo(() -> createElementPositioner(element));
-}
-
 private function createElementPositioner(element:ElementOf<Positioned>) return function () {
   var positioned = element.component;
   var el:js.html.Element = element.getObject();

@@ -4,7 +4,6 @@ import pine.*;
 import pine.html.*;
 
 using Nuke;
-using eg.CoreHooks;
 
 class Modal extends AutoComponent {
   final styles:ClassName = null;
@@ -12,11 +11,10 @@ class Modal extends AutoComponent {
   final onHide:()->Void;
   final children:Children;
   final hideOnEscape:Bool = true;
+  final lockScroll:Bool = true;
 
   public function render(context:Context):Component {
-    context.useLockedDocumentBody();
-
-    return new Portal({
+    var portal = new Portal({
       target: PortalContext.from(context).getTarget(),
       child: new Layer({
         styles: layerStyles,
@@ -35,5 +33,9 @@ class Modal extends AutoComponent {
         })
       })
     });
+
+    if (!lockScroll) return portal;
+
+    return new ScrollLocked({ child: portal });
   }
 }

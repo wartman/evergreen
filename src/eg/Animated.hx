@@ -10,7 +10,6 @@ import js.html.Element;
 import js.lib.Promise;
 
 using Reflect;
-using pine.Hooks;
 #end
 
 class Animated extends AutoComponent {
@@ -26,24 +25,25 @@ class Animated extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    var animation = context.useMemo(createAnimationController, animation -> animation.dispose());
-    context.useInit(() -> {
-      animation.registerAnimation(context, true);
-      null;
+    return new Proxy<Animated>({
+      target: context,
+      setup: element -> {
+        var animation = createAnimationController();
+        element.events.afterInit.add((_,_) -> animation.registerAnimation(context, true));
+        element.events.afterUpdate.add(_ -> animation.registerAnimation(context, false));
+        element.events.beforeDispose.add(_ -> {
+          if (element.component.onDispose != null) {
+            element.component.onDispose(context);
+          }
+          animation.dispose();
+        });
+      },
+      child: child
     });
-    context.useUpdate(() -> {
-      animation.registerAnimation(context, false);
-      null;
-    });
-    context.useCleanup(() -> {
-      var element:ElementOf<Animated> = cast context;
-      if (element.component.onDispose != null) {
-        element.component.onDispose(context);
-      }
-    });
+    #else
+    return child;
     #end
 
-    return child;
   }
 }
 

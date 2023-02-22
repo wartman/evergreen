@@ -4,8 +4,6 @@ import pine.*;
 import haxe.ds.Option;
 
 using pine.core.OptionTools;
-using pine.Hooks;
-using eg.CoreHooks;
 
 class DropdownPanel extends AutoComponent {
   public final onHide:()->Void;
@@ -13,18 +11,7 @@ class DropdownPanel extends AutoComponent {
   final child:Child;
 
   function render(context:Context) {
-    #if (js && !nodejs)
-    // var hook = Hook.from(context);
-    var controller = context.useMemo(() -> createController(context));
-    context.useKeyPressEvents((e, _) -> controller.onKeyDown(e));
-    context.useGlobalClickEvent((e, _) -> controller.hide(e));
-    context.useInit(() -> {
-      controller.maybeFocusFirst();
-      return () -> FocusContext.from(context).returnFocus();
-    });
-    #end
-
-    return new Popover({
+    var popover = new Popover({
       getTarget: () -> context
         .queryAncestors()
         .ofType(Dropdown)
@@ -36,6 +23,31 @@ class DropdownPanel extends AutoComponent {
       attachment: attachment,
       child: child
     });
+
+    #if (js && !nodejs)
+    return new Proxy<DropdownPanel>({
+      target: context,
+      setup: element -> {
+        var controller = createController(context);
+        var document = js.Browser.document;
+        
+        document.addEventListener('keydown', controller.onKeyDown);
+        document.addEventListener('click', controller.hide);
+
+        element.onInit(() -> {
+          controller.maybeFocusFirst();
+          return () -> {
+            document.removeEventListener('keydown', controller.onKeyDown);
+            document.removeEventListener('click', controller.hide);
+            FocusContext.from(context).returnFocus();
+          }
+        });
+      },
+      child: popover
+    });
+    #else
+    return popover;
+    #end
   }
 }
 

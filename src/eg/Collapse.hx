@@ -3,7 +3,7 @@ package eg;
 import eg.CollapseContext;
 import pine.*;
 
-using pine.core.OptionTools;
+using Kit;
 
 class Collapse extends AutoComponent {
   final child:Child;
@@ -19,13 +19,13 @@ class Collapse extends AutoComponent {
         });
         AccordionContext
           .maybeFrom(context)
-          .some(accordion -> accordion.add(collapse));
+          .ifExtract(Some(accordion), accordion.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
         AccordionContext
           .maybeFrom(context)
-          .some(accordion -> accordion.remove(collapse));
+          .ifExtract(Some(accordion), accordion.remove(collapse));
         collapse.dispose();
       },
       render: _ -> child 

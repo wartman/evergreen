@@ -2,3 +2,4 @@
 # -cp ${HAXE_LIBCACHE}/pine/0.0.1/github/c0b43a26314f4c4226550fdb943944189492d0c0/src
 -cp ../pine-ui/src
 -D pine=0.0.1
+-lib kit

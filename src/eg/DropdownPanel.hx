@@ -3,8 +3,6 @@ package eg;
 import pine.*;
 import haxe.ds.Option;
 
-using pine.core.OptionTools;
-
 class DropdownPanel extends AutoComponent {
   public final onHide:()->Void;
   final attachment:PositionedAttachment;

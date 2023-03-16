@@ -4,7 +4,6 @@ import eg.Layer;
 import pine.*;
 
 using Nuke;
-using pine.core.OptionTools;
 
 class LayerContainer extends AutoComponent {
   public final hideOnEscape:Bool;

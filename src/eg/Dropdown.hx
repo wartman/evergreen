@@ -4,7 +4,6 @@ import pine.*;
 import eg.DropdownContext;
 
 using Nuke;
-using pine.core.OptionTools;
 
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };

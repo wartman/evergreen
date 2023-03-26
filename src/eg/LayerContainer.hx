@@ -11,7 +11,7 @@ class LayerContainer extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    return new Proxy<LayerContainer>({
+    return new Setup<LayerContainer>({
       target: context,
       setup: element -> {
         var document = js.Browser.document;

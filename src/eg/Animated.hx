@@ -25,7 +25,7 @@ class Animated extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    return new Proxy<Animated>({
+    return new Setup<Animated>({
       target: context,
       setup: element -> {
         var animation = createAnimationController();

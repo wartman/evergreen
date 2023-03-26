@@ -54,7 +54,7 @@ class KeyboardInput extends AutoComponent {
   final handler:(key:KeyType, getModifierState:(modifier:KeyModifier)->Bool)->Void;
 
   function render(context:Context) {
-    return new Proxy<KeyboardInput>({
+    return new Setup<KeyboardInput>({
       target: context,
       setup: element -> {
         #if (js && !nodejs)

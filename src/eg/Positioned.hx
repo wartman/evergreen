@@ -9,7 +9,7 @@ class Positioned extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    return new Proxy<Positioned>({
+    return new Setup<Positioned>({
       target: context,
       setup: element -> {
         var positionElement = createElementPositioner(element);

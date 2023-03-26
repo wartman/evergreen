@@ -7,7 +7,7 @@ class ScrollLocked extends AutoComponent {
 
   function render(context:Context) {
     #if (js && !nodejs)
-    return new Proxy<ScrollLocked>({
+    return new Setup<ScrollLocked>({
       target: context,
       setup: element -> {
         element.onInit(() -> {

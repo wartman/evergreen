@@ -23,7 +23,7 @@ class DropdownPanel extends AutoComponent {
     });
 
     #if (js && !nodejs)
-    return new Proxy<DropdownPanel>({
+    return new Setup<DropdownPanel>({
       target: context,
       setup: element -> {
         var controller = createController(context);

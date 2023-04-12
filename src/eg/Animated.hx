@@ -111,18 +111,23 @@ private function registerAnimations(el:Element, keyframes:Array<Dynamic>, option
 }
 
 private function stopAnimations(el:Element, onFinished:()->Void) {
-  Promise.all(el.getAnimations().map(animation -> {
-    return new Promise((res, _) -> {
-      animation.addEventListener('cancel', () -> res(null), { once: true });
-      animation.addEventListener('finish', () -> res(null), { once: true });
-      animation.cancel();
-    });
-  })).finally(onFinished);
+  kit.Task.parallel(...el.getAnimations().map(animation -> new kit.Task(activate -> {
+    animation.addEventListener('cancel', () -> activate(Ok(null)), { once: true });
+    animation.addEventListener('finish', () -> activate(Ok(null)), { once: true });
+    animation.cancel();
+  }))).handle(_ -> onFinished());
+
+  // Promise.all(el.getAnimations().map(animation -> {
+  //   return new Promise((res, _) -> {
+  //     animation.addEventListener('cancel', () -> res(null), { once: true });
+  //     animation.addEventListener('finish', () -> res(null), { once: true });
+  //     animation.cancel();
+  //   });
+  // })).finally(onFinished);
 }
 
 private function prefersReducedMotion() {
   var query = window.matchMedia('(prefers-reduced-motion: reduce)');
   return query.matches;
 }
-
 #end

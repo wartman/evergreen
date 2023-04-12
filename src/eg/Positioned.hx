@@ -16,7 +16,7 @@ class Positioned extends AutoComponent {
         var window = js.Browser.window;
 
         element.onInit(() -> {
-          var el:js.html.Element = context.getObject();
+          var el:js.html.Element = element.getObject();
           el.style.position = 'fixed';
           el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
 

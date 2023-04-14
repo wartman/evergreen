@@ -1,72 +1,62 @@
 package eg;
 
 import pine.*;
-import haxe.ds.Option;
+
+using Kit;
 
 class DropdownPanel extends AutoComponent {
   public final onHide:()->Void;
   final attachment:PositionedAttachment;
   final child:Child;
 
-  function render(context:Context) {
-    var popover = new Popover({
-      getTarget: () -> context
-        .queryAncestors()
-        .ofType(Dropdown)
+  function build() {
+    #if (js && !nodejs)
+    var controller = createController(this);
+    var document = js.Browser.document;
+    
+    onMount(() -> {
+      document.addEventListener('keydown', controller.onKeyDown);
+      document.addEventListener('click', controller.hide);
+      controller.maybeFocusFirst();
+    });
+    onCleanup(() -> {
+      document.removeEventListener('keydown', controller.onKeyDown);
+      document.removeEventListener('click', controller.hide);
+      FocusContext.from(this).returnFocus();
+    });
+    #end
+
+    return new Popover({
+      getTarget: () -> findAncestorOfType(Dropdown)
         .orThrow('No Dropdown')
-        .queryChildren()
-        .findOfType(DropdownToggle, true)
+        .findChildOfType(DropdownToggle, true)
         .orThrow('No dropdown toggle')
         .getObject(),
       attachment: attachment,
       child: child
     });
-
-    #if (js && !nodejs)
-    return new Setup<DropdownPanel>({
-      target: context,
-      setup: element -> {
-        var controller = createController(context);
-        var document = js.Browser.document;
-        
-        document.addEventListener('keydown', controller.onKeyDown);
-        document.addEventListener('click', controller.hide);
-
-        element.onInit(() -> {
-          controller.maybeFocusFirst();
-          return () -> {
-            document.removeEventListener('keydown', controller.onKeyDown);
-            document.removeEventListener('click', controller.hide);
-            FocusContext.from(context).returnFocus();
-          }
-        });
-      },
-      child: popover
-    });
-    #else
-    return popover;
-    #end
   }
 }
 
 #if (js && !nodejs)
-private function createController(element:ElementOf<DropdownPanel>):{
+private function createController(panel:DropdownPanel):{
   hide:(e:js.html.Event)->Void,
   onKeyDown:(e:js.html.KeyboardEvent)->Void,
   maybeFocusFirst:()->Void
 } {
-  var current:Null<Element> = null;
+  var current:Null<DropdownItem> = null;
 
   function hide(e:js.html.Event) {
     e.stopPropagation();
     e.preventDefault();
-    element.component.onHide();
+    panel.onHide();
   }
 
-  function getNextFocusedChild(offset:Int):Option<Element> {
-    var items = element.queryChildren().filterOfType(DropdownItem, true);
+  function getNextFocusedChild(offset:Int):Maybe<Component> {
+    var items = panel.queryChildrenOfType(DropdownItem, true);
     var index = Math.ceil(items.indexOf(current) + offset);
     var item = items[index];
+    
     if (item != null) {
       current = item;
       return Some(current);
@@ -79,7 +69,7 @@ private function createController(element:ElementOf<DropdownPanel>):{
     switch getNextFocusedChild(1) {
       case Some(item):
         var el:js.html.Element = item.getObject();
-        FocusContext.from(element).focus(el);
+        FocusContext.from(panel).focus(el);
       case None:
     }
   }
@@ -107,7 +97,7 @@ private function createController(element:ElementOf<DropdownPanel>):{
   }
 
   function onKeyDown(event:js.html.KeyboardEvent) {
-    if (element.status == Building || element.status == Disposed) return;
+    // if (panel.getStatus() == Building || panel.getStatus() == Disposed) return;
 
     switch event.key {
       case 'Escape': 

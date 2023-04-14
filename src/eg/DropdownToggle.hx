@@ -5,7 +5,7 @@ import pine.*;
 class DropdownToggle extends AutoComponent {
   final child:Child;
   
-  function render(context:Context) {
+  function build() {
     return child;
   }
 }

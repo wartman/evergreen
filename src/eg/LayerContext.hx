@@ -1,6 +1,7 @@
 package eg;
 
 import pine.*;
+import pine.signal.*;
 
 typedef LayerContextProvider = Provider<LayerContext>;
 
@@ -13,17 +14,17 @@ enum LayerContextStatus {
 // handle multiple layers being active at once.
 @:allow(eg)
 class LayerContext implements Record {
-  public static function from(context:Context) {
+  public static function from(context:Component) {
     return LayerContextProvider.from(context);
   }
   
-  public var status:LayerContextStatus = Showing;
+  public final status:Signal<LayerContextStatus> = Showing;
 
   public function hide():Void {
-    status = Hiding;
+    status.set(Hiding);
   }
   
   public function show():Void {
-    status = Showing;
+    status.set(Showing);
   }
 }

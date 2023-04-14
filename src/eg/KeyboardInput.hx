@@ -53,26 +53,23 @@ class KeyboardInput extends AutoComponent {
   final preventDefault:Bool = true;
   final handler:(key:KeyType, getModifierState:(modifier:KeyModifier)->Bool)->Void;
 
-  function render(context:Context) {
-    return new Setup<KeyboardInput>({
-      target: context,
-      setup: element -> {
-        #if (js && !nodejs)
-        element.onInit(() -> {
-          var el:js.html.Element = element.getObject();
-          var document = el.ownerDocument;
+  function build() {
+    #if (js && !nodejs)
+    var document = js.Browser.document;
+    function listener(e:js.html.KeyboardEvent) {
+      if (preventDefault) e.preventDefault();
+      handler(e.key, (key:KeyModifier) -> e.getModifierState(key));
+    }
 
-          function listener(e:js.html.KeyboardEvent) {
-            if (preventDefault) e.preventDefault();
-            handler(e.key, (key:KeyModifier) -> e.getModifierState(key));
-          }
+    onMount(() -> {
+      var el:js.html.Element = getObject();
+      var document = el.ownerDocument;
 
-          document.addEventListener('keydown', listener);
-          return () -> document.removeEventListener('keydown', listener);
-        });
-        #end
-      },
-      child: child
+      document.addEventListener('keydown', listener);
     });
+    onCleanup(() -> document.removeEventListener('keydown', listener));
+    #end
+    
+    return child;
   }
 }

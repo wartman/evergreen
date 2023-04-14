@@ -20,62 +20,59 @@ class Layer extends AutoComponent {
   final showAnimation:Keyframes = DefaultShowAnimation;
   final hideAnimation:Keyframes = DefaultHideAnimation;
 
-  public function render(context:Context):Component {
+  public function build() {
     return new LayerContextProvider({
       create: () -> new LayerContext({}),
-      dispose: layer -> layer.dispose(),
-      render: layer -> new Scope({
-        render: context -> {
-          var status = layer.status;
-          var body = new Html<'div'>({
-            // @todo: Consider if we actually want this dependency
-            // on Nuke in here. It might be OK if the layer has 
-            // no classes.
-            className: ClassName.ofArray([
-              'eg-layer',
-              styles,
-              // Note: We *do* actually want to define a few 
-              // styles here, as this is just how Layers work.
-              Css.atoms({
-                position: 'fixed',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                overflowX: 'hidden',
-                overflowY: 'scroll',
-              })
-            ]),
-            onclick: e -> if (hideOnClick) {
-              e.preventDefault();
-              layer.hide();
-            },
-            children: new LayerTarget({ child: child })
-          });
-          var animation = new Animated({
-            keyframes: switch status { 
-              case Showing: 
-                showAnimation;
-              case Hiding: 
-                hideAnimation;
-            },
-            duration: transitionSpeed,
-            onFinished: _ -> switch status {
-              case Showing:
-                if (onShow != null) onShow();
-              case Hiding:
-                if (onHide != null) onHide();
-            },
-            onDispose: _ -> if (onHide != null) onHide(),
-            child: body
-          });
+      dispose: layer -> null,
+      build: layer -> {
+        var body = new Html<'div'>({
+          // @todo: Consider if we actually want this dependency
+          // on Nuke in here. It might be OK if the layer has 
+          // no classes.
+          className: ClassName.ofArray([
+            'eg-layer',
+            styles,
+            // Note: We *do* actually want to define a few 
+            // styles here, as this is just how Layers work.
+            Css.atoms({
+              position: 'fixed',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              overflowX: 'hidden',
+              overflowY: 'scroll',
+            })
+          ]),
+          onclick: e -> if (hideOnClick) {
+            e.preventDefault();
+            layer.hide();
+          },
+          children: new LayerTarget({ child: child })
+        });
+        var animation = new Animated({
+          keyframes: compute(() -> switch layer.status() { 
+            case Showing: 
+              showAnimation;
+            case Hiding: 
+              hideAnimation;
+          }),
+          duration: transitionSpeed,
+          onFinished: _ -> switch layer.status.peek() {
+            case Showing:
+              if (onShow != null) onShow();
+            case Hiding:
+              if (onHide != null) onHide();
+          },
+          onDispose: _ -> if (onHide != null) onHide(),
+          child: body
+        });
 
-          return new LayerContainer({
-            hideOnEscape: hideOnEscape,
-            child: animation
-          });
-        }
-      })
+        return new LayerContainer({
+          hideOnEscape: hideOnEscape,
+          child: animation
+        });
+      }
     });
   }
 }
@@ -83,7 +80,7 @@ class Layer extends AutoComponent {
 class LayerTarget extends AutoComponent {
   final child:Component;
 
-  function render(context:Context) {
+  function build() {
     return child;
   }
 }

@@ -1,18 +1,14 @@
 package eg;
 
 import pine.*;
-import pine.debug.Debug;
-import pine.core.Disposable;
 
 typedef PortalContextProvider = pine.Provider<PortalContext>;
 
 class PortalContext implements Disposable {
-  public static function from(context:Context):PortalContext {
-    return switch PortalContextProvider.maybeFrom(context) {
-      case Some(portal): portal;
-      // @todo: Create a default portal if none exists.
-      case None: Debug.error('No PortalContext was found');
-    }
+  public static function from(context:Component):PortalContext {
+    return PortalContextProvider
+      .maybeFrom(context)
+      .orThrow('No PortalContext was found');
   }
 
   #if (js && !nodejs)

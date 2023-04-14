@@ -5,9 +5,7 @@ import pine.*;
 class DropdownContainer extends AutoComponent {
   final children:Children;
   
-  function render(context:Context) {
-    return new Fragment({
-      children: children
-    });
+  function build() {
+    return new Fragment(children);
   }
 }

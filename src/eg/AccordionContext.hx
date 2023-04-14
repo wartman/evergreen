@@ -1,8 +1,7 @@
 package eg;
 
 import pine.*;
-import pine.state.*;
-import pine.core.Disposable;
+import pine.signal.*;
 
 typedef AccordionContextProvider = Provider<AccordionContext>;
 
@@ -12,11 +11,11 @@ enum abstract AccordionContextStatus(Int) {
 }
 
 class AccordionContext implements Disposable {
-  public inline static function from(context:Context) {
+  public inline static function from(context:Component) {
     return AccordionContextProvider.from(context);
   }
 
-  public inline static function maybeFrom(context:Context) {
+  public inline static function maybeFrom(context:Component) {
     return AccordionContextProvider.maybeFrom(context);
   }
 
@@ -37,7 +36,7 @@ class AccordionContext implements Disposable {
   public function add(collapse:CollapseContext) {
     var prev = status;
     status = Updating;
-    children.set(collapse, new Observer(() -> switch collapse.status {
+    children.set(collapse, new Observer(() -> switch collapse.status() {
       case Expanded if (status != Updating && !sticky):
         status = Updating;
         for (item => _ in children) {

@@ -10,7 +10,7 @@ class Collapse extends AutoComponent {
   final initialStatus:CollapseContextStatus = Collapsed;
   final duration:Int = 200;
 
-  function render(context:Context) {
+  function build() {
     return new CollapseContextProvider({
       create: () -> {
         var collapse = new CollapseContext({ 
@@ -18,17 +18,17 @@ class Collapse extends AutoComponent {
           duration: duration
         });
         AccordionContext
-          .maybeFrom(context)
+          .maybeFrom(this)
           .ifExtract(Some(accordion), accordion.add(collapse));
         return collapse;
       },
       dispose: collapse -> {
         AccordionContext
-          .maybeFrom(context)
+          .maybeFrom(this)
           .ifExtract(Some(accordion), accordion.remove(collapse));
-        collapse.dispose();
+        // collapse.dispose();
       },
-      render: _ -> child 
+      build: _ -> child 
     });
   }
 }

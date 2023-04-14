@@ -8,5 +8,6 @@
 
 -D debug
 -D js-es=6
+-D message-reporting=pretty
 
 -js dist/test.js

@@ -9,37 +9,29 @@ class LayerContainer extends AutoComponent {
   public final hideOnEscape:Bool;
   final child:Child;
 
-  function render(context:Context) {
+  function build() {
     #if (js && !nodejs)
-    return new Setup<LayerContainer>({
-      target: context,
-      setup: element -> {
-        var document = js.Browser.document;
+    var document = js.Browser.document;
 
-        function onEscape(e:js.html.KeyboardEvent)  switch e.key {
-          case 'Escape' if (element.component.hideOnEscape):
-            e.preventDefault();
-            LayerContext.from(context).hide();
-          default:
-        }
-        
-        element.onInit(() -> {
-          document.addEventListener('keydown', onEscape);
-          FocusContext.from(context).focus(element
-            .queryChildren()
-            .findOfType(LayerTarget, true)
-            .orThrow('Expected a LayerTarget')
-            .getObject());
-          return () -> {
-            document.removeEventListener('keydown', onEscape);
-            FocusContext.from(context).returnFocus();
-          }
-        });
-      },
-      child: child
+    function onEscape(e:js.html.KeyboardEvent) switch e.key {
+      case 'Escape' if (hideOnEscape):
+        e.preventDefault();
+        LayerContext.from(this).hide();
+      default:
+    }
+
+    onMount(() -> {
+      document.addEventListener('keydown', onEscape);
+      var obj = findChildOfType(LayerTarget, true)
+        .orThrow('Expected a LayerTarget')
+        .getObject();
+      FocusContext.from(this).focus(obj);
     });
-    #else
-    return child;
+    onCleanup(() -> {
+      document.removeEventListener('keydown', onEscape);
+      FocusContext.from(this).returnFocus();
+    });
     #end
+    return child;
   }
 }

@@ -8,23 +8,24 @@ import eg.*;
 using Nuke;
 
 class DropdownExample extends AutoComponent {
-  function render(context:Context) {
+  function build() {
     return new Html<'div'>({
       children: [
         new Dropdown({
-          toggle: new Scope({
-            render: context -> new Html<'button'>({
-              onclick: e -> {
-                e.preventDefault();
-                DropdownContext.from(context).toggle();
-              },
-              children: switch DropdownContext.from(context).status {
+          toggle: dropdown -> new Html<'button'>({
+            onclick: e -> {
+              e.preventDefault();
+              e.stopPropagation();
+              dropdown.toggle();
+            },
+            children: [
+              new Text(compute(() -> switch dropdown.status() {
                 case Open: 'Close Dropdown';
                 case Closed: 'Open Dropdown';
-              }
-            })
+              }))
+            ]
           }),
-          child: new Html<'ul'>({
+          body: _ -> new Html<'ul'>({
             onclick: e -> e.stopPropagation(),
             className: Css.atoms({
               padding: 1.em(),
@@ -56,7 +57,7 @@ class ExampleDropdownItem extends AutoComponent {
   final child:Child;
   final onClick:EventListener;
 
-  function render(context:Context) {
+  function build() {
     return new Html<'li'>({
       children: [
         // Note: `DropdownItem` is just a marker component, used by the
@@ -76,7 +77,7 @@ class ExampleDropdownItem extends AutoComponent {
               // Note: Something like this is required to
               // auto-close the dropdown when an option is 
               // selected.
-              DropdownContext.from(context).close();
+              DropdownContext.from(this).close();
               onClick(e);
             },
             href: '#',

@@ -7,46 +7,33 @@ class Positioned extends AutoComponent {
   public final attachment:PositionedAttachment;
   final child:Child;
 
-  function render(context:Context) {
+  function build() {
     #if (js && !nodejs)
-    return new Setup<Positioned>({
-      target: context,
-      setup: element -> {
-        var positionElement = createElementPositioner(element);
-        var window = js.Browser.window;
+    var positionElement = createElementPositioner(this);
+    var window = js.Browser.window;
 
-        element.onInit(() -> {
-          var el:js.html.Element = element.getObject();
-          el.style.position = 'fixed';
-          el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
+    onMount(() -> {
+      var el:js.html.Element = getObject();
+      el.style.position = 'fixed';
+      el.style.zIndex = '9000'; // @todo: Figure out a universal zIndex api
 
-          window.addEventListener('resize', positionElement);
-          window.addEventListener('scroll', positionElement);
+      window.addEventListener('resize', positionElement);
+      window.addEventListener('scroll', positionElement);
 
-          positionElement();
-          
-          return () -> {
-            window.removeEventListener('resize', positionElement);
-            window.removeEventListener('scroll', positionElement);
-          }
-        });
-        element.onUpdate(() -> {
-          positionElement();
-          return null;
-        }, { skipInit: true });
-      },
-      child: child
+      positionElement();
     });
-    #else
-    return child;
+    onCleanup(() -> {
+      window.removeEventListener('resize', positionElement);
+      window.removeEventListener('scroll', positionElement);
+    });
     #end
+    return child;
   }
 }
 
 #if (js && !nodejs)
-private function createElementPositioner(element:ElementOf<Positioned>) return function () {
-  var positioned = element.component;
-  var el:js.html.Element = element.getObject();
+private function createElementPositioner(positioned:Positioned) return function () {
+  var el:js.html.Element = positioned.getObject();
   var target:js.html.Element = positioned.getTarget();
   var targetRect = target.getBoundingClientRect();
   var container = getContainerSize();

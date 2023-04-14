@@ -7,7 +7,7 @@ import eg.*;
 using Nuke;
 
 class CollapseExample extends AutoComponent {
-  function render(context:Context) {
+  function build() {
     return new Collapse({
       child: new Html<'div'>({
         className: Css.atoms({
@@ -27,21 +27,22 @@ class CollapseExample extends AutoComponent {
 class ExampleCollapseHeader extends AutoComponent {
   final child:Child;
 
-  function render(context:Context) {
-    var collapse = CollapseContext.from(context);
+  function build() {
+    var collapse = CollapseContext.from(this);
 
     return new Html<'button'>({
       onclick: _ -> collapse.toggle(),
-      children: new Scope({
-        // `collapse.status` is a State, so we can observe it
-        // for changes. In a real implementation, this might be
-        // where you have a chevron icon rotate or otherwise
-        // indicate a collapsed/expanded status.
-        render: _ -> switch collapse.status {
-          case Collapsed: new Fragment({ children: [ child, new Text(' +') ] });
-          case Expanded: new Fragment({ children: [ child, new Text(' -') ] });
-        }
-      })
+      // `collapse.status` is a State, so we can observe it
+      // for changes. In a real implementation, this might be
+      // where you have a chevron icon rotate or otherwise
+      // indicate a collapsed/expanded status.
+      children: [
+        child,
+        new Text(compute(() -> switch collapse.status() {
+          case Collapsed: ' +';
+          case Expanded: ' -';
+        }))
+      ]
     });
   }
 }
@@ -49,7 +50,7 @@ class ExampleCollapseHeader extends AutoComponent {
 class ExampleCollapseBody extends AutoComponent {
   final children:Children;
 
-  function render(context:Context) {
+  function build() {
     return new CollapseItem({
       child: new Html<'div'>({
         className: Css.atoms({
@@ -65,7 +66,7 @@ class ExampleCollapseBody extends AutoComponent {
           className: Css.atoms({
             // Note that we do NOT put the padding in the
             // main collapse target, as this will result in the collapsed
-            // element still being visible even if its hieght is `0`.
+            // element still being visible even if its height is `0`.
             padding: 15.px()
           }),
           children: children

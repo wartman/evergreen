@@ -1,6 +1,7 @@
 package eg;
 
 import pine.*;
+import pine.signal.*;
 
 enum abstract DropdownStatus(Bool) {
   final Open = true;
@@ -10,22 +11,22 @@ enum abstract DropdownStatus(Bool) {
 typedef DropdownContextProvider = Provider<DropdownContext>; 
 
 class DropdownContext implements Record {
-  public inline static function from(context:Context) {
+  public inline static function from(context:Component) {
     return DropdownContextProvider.from(context);
   }
 
   public final attachment:PositionedAttachment;
-  public var status:DropdownStatus;
+  public final status:Signal<DropdownStatus>;
 
   public function open() {
-    status = Open;
+    status.set(Open);
   }
 
   public function close() {
-    status = Closed;
+    status.set(Closed);
   }
 
   public function toggle() {
-    status = status == Open ? Closed : Open;
+    status.update(status -> status == Open ? Closed : Open);
   }
 }

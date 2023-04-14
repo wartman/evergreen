@@ -1,6 +1,7 @@
 package eg;
 
 import pine.*;
+import pine.signal.*;
 
 typedef CollapseContextProvider = Provider<CollapseContext>;
 
@@ -10,28 +11,28 @@ enum abstract CollapseContextStatus(Bool) {
 }
 
 class CollapseContext implements Record {
-  public static function from(context:Context) {
+  public static function from(context:Component) {
     return switch CollapseContextProvider.maybeFrom(context) {
       case Some(collapse): collapse;
       case None: throw 'No collapse context was found';
     }
   }
 
-  public var status:CollapseContextStatus;
+  public final status:Signal<CollapseContextStatus>;
   public final duration:Int = 200;
 
   public function toggle() {
-    switch status {
+    switch status.peek() {
       case Expanded: collapse();
       case Collapsed: expand();
     }
   }
 
   public function expand() {
-    status = Expanded;
+    status.set(Expanded);
   }
 
   public function collapse() {
-    status = Collapsed;
+    status.set(Collapsed);
   }
 }

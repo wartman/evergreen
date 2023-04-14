@@ -1,13 +1,13 @@
 package eg;
 
-import pine.Context;
+import pine.*;
 
 using Lambda;
 using Reflect;
 
 class Keyframes {
   public final id:String;
-  public final factory:(context:Context) -> Array<{}>;
+  public final factory:(context:Component) -> Array<{}>;
 
   public function new(id, factory) {
     this.id = id;

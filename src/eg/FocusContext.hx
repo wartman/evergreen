@@ -7,7 +7,7 @@ typedef FocusContextProvider = Provider<FocusContext>;
 class FocusContext {
   static var instance:Null<FocusContext> = null;
 
-  public inline static function from(context:Context) {
+  public inline static function from(context:Component) {
     return switch FocusContextProvider.maybeFrom(context) {
       case Some(focus): 
         return focus;

@@ -10,19 +10,13 @@ class Popover extends AutoComponent {
   final attachment:PositionedAttachment;
   final getTarget:Null<()->Dynamic> = null;
 
-  function render(context:Context) {
-    return new Portal({
-      target: PortalContext.from(context).getTarget(),
-      child: new Positioned({
-        getTarget: getTarget != null 
-          ? getTarget 
-          : () -> switch context.queryAncestors().ofType(ObjectComponent) {
-            case Some(parent): parent.getObject();
-            case None: throw 'No parent object';
-          },
-        attachment: attachment,
-        child: child
-      })
-    });
+  function build() {
+    return new Portal(PortalContext.from(this).getTarget(), () -> new Positioned({
+      getTarget: getTarget ?? () -> findAncestorOfType(ObjectComponent)
+        .map(parent -> parent.getObject())
+        .orThrow('No parent object'),
+      attachment: attachment,
+      child: child
+    }));
   }
 }

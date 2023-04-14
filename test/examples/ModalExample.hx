@@ -9,14 +9,14 @@ using Nuke;
 class ModalExample extends AutoComponent {
   var isOpen:Bool = false;
 
-  function render(context:Context) {
+  function build() {
     return new Html<'div'>({
       children: [
         new Html<'button'>({
-          onclick: e -> isOpen = true,
+          onclick: e -> isOpen.set(true),
           children: 'Open Modal'
         }),
-        if (isOpen) new Modal({
+        new Show(isOpen, () -> new Modal({
           styles: Css.atoms({
             padding: 1.em(),
             background: rgb(255, 255, 255),
@@ -29,23 +29,17 @@ class ModalExample extends AutoComponent {
             justifyContent: 'center',
             backgroundColor: rgba(0, 0, 0, 0.5)
           }),
-          onHide: () -> isOpen = false,
+          onHide: () -> isOpen.set(false),
           children: [
             new Html<'div'>({
               children: 'Hey world'
             }),
-            new Scope({
-              render: context -> new Html<'button'>({
-                // Note: We do this instead of `isOpen = false` to 
-                // let the Layer handle hiding itself. This ensures,
-                // among other things, that the hide animation 
-                // plays.
-                onclick: _ -> LayerContext.from(context).hide(),
-                children: 'Ok'
-              }) 
-            })
+            new Scope(context -> new Html<'button'>({
+              onclick: _ -> LayerContext.from(context).hide(),
+              children: 'Ok'
+            }))
           ]
-        }) else null
+        }))
       ]
     });
   }

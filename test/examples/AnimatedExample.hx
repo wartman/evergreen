@@ -7,7 +7,7 @@ import eg.*;
 using Nuke;
 
 class AnimatedExample extends AutoComponent {
-  function render(context:Context) {
+  function build() {
     return new Animated({
       keyframes: new Keyframes('auto', _ ->  [
         { transform: 'rotate(0)' },

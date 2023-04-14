@@ -1,49 +1,41 @@
 package eg;
 
 import pine.*;
+import pine.signal.Signal;
 
 #if (js && !nodejs)
 import js.Browser.window;
-import js.html.Element as DomElement;
 import js.html.Animation;
 import js.html.Element;
-import js.lib.Promise;
 
 using Reflect;
 #end
 
 class Animated extends AutoComponent {
+  public final keyframes:ReadonlySignal<Keyframes>;
   public final dontAnimateInitial:Bool = false;
   public final dontRepeatCurrentAnimation:Bool = true;
-  public final keyframes:Keyframes;
   public final duration:Int;
   public final infinite:Bool = false;
   public final easing:String = 'linear';
-  public final onFinished:(context:Context)->Void = null;
-  public final onDispose:(context:Context)->Void = null;
+  public final onFinished:(context:Component)->Void = null;
+  public final onDispose:(context:Component)->Void = null;
   final child:Child;
 
-  function render(context:Context) {
+  function build() {
     #if (js && !nodejs)
-    return new Setup<Animated>({
-      target: context,
-      setup: element -> {
-        var animation = createAnimationController();
-        element.events.afterInit.add((_,_) -> animation.registerAnimation(context, true));
-        element.events.afterUpdate.add(_ -> animation.registerAnimation(context, false));
-        element.events.beforeDispose.add(_ -> {
-          if (element.component.onDispose != null) {
-            element.component.onDispose(context);
-          }
-          animation.dispose();
-        });
-      },
-      child: child
+    var animation = createAnimationController();
+    var first = true;
+    effect(() -> {
+      animation.registerAnimation(this, first);
+      first = false;
+      return () -> animation.dispose();
     });
-    #else
-    return child;
+    onCleanup(() -> {
+      if (onDispose != null) onDispose(this);
+    });
     #end
-
+    return child;
   }
 }
 
@@ -58,11 +50,15 @@ private function createAnimationController() {
   var currentKeyframes:Null<Keyframes> = null;
   var currentAnimation:Null<Animation> = null;
 
-  function registerAnimation(element:ElementOf<Animated>, first:Bool = false) {
-    var animated = element.component;
-    var el:DomElement = element.getObject();
+  function registerAnimation(animated:Animated, first:Bool = false) {
+    // switch animated.getStatus() {
+    //   case Disposing | Disposed: return;
+    //   default:
+    // }
+
+    var el:Element = animated.getObject();
     var duration = if (first && animated.dontAnimateInitial) 0 else animated.duration;
-    var keyframes = animated.keyframes;
+    var keyframes = animated.keyframes.get();
 
     if (animated.dontRepeatCurrentAnimation) {
       if (currentKeyframes != null && currentKeyframes.equals(keyframes)) {
@@ -79,10 +75,10 @@ private function createAnimationController() {
     
     function onFinished() {
       currentAnimation = null;
-      if (animated.onFinished != null) animated.onFinished(element);
+      if (animated.onFinished != null) animated.onFinished(animated);
     }
 
-    currentAnimation = registerAnimations(el, keyframes.create(element), {
+    currentAnimation = registerAnimations(el, keyframes.create(animated), {
       duration: duration,
       easing: animated.easing,
       iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1

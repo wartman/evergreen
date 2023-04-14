@@ -13,26 +13,23 @@ class Modal extends AutoComponent {
   final hideOnEscape:Bool = true;
   final lockScroll:Bool = true;
 
-  public function render(context:Context):Component {
-    var portal = new Portal({
-      target: PortalContext.from(context).getTarget(),
-      child: new Layer({
-        styles: layerStyles,
-        hideOnEscape: hideOnEscape,
-        onHide: onHide,
-        child: new Html<'div'>({
-          className: ClassName.ofArray([
-            'eg-modal-container',
-            styles
-          ]),
-          onclick: e -> e.stopPropagation(),
-          ariaModal: 'true',
-          tabIndex: -1,
-          role: 'dialog',
-          children: children
-        })
+  public function build():Component {
+    var portal = new Portal(PortalContext.from(this).getTarget(), () -> new Layer({
+      styles: layerStyles,
+      hideOnEscape: hideOnEscape,
+      onHide: onHide,
+      child: new Html<'div'>({
+        className: ClassName.ofArray([
+          'eg-modal-container',
+          styles
+        ]),
+        onclick: e -> e.stopPropagation(),
+        ariaModal: 'true',
+        tabIndex: -1,
+        role: 'dialog',
+        children: children
       })
-    });
+    }));
 
     if (!lockScroll) return portal;
 

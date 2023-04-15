@@ -7,7 +7,7 @@ import eg.*;
 using Nuke;
 
 class ModalExample extends AutoComponent {
-  var isOpen:Bool = false;
+  @:signal final isOpen:Bool = false;
 
   function build() {
     return new Html<'div'>({

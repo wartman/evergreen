@@ -1,7 +1,6 @@
 package eg;
 
 import pine.*;
-import pine.signal.*;
 
 enum abstract DropdownStatus(Bool) {
   final Open = true;
@@ -10,13 +9,13 @@ enum abstract DropdownStatus(Bool) {
 
 typedef DropdownContextProvider = Provider<DropdownContext>; 
 
-class DropdownContext implements Record {
+class DropdownContext extends Record {
   public inline static function from(context:Component) {
     return DropdownContextProvider.from(context);
   }
 
   public final attachment:PositionedAttachment;
-  public final status:Signal<DropdownStatus>;
+  @:signal public final status:DropdownStatus;
 
   public function open() {
     status.set(Open);

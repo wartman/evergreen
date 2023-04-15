@@ -1,7 +1,6 @@
 package eg;
 
 import pine.*;
-import pine.signal.Signal;
 
 #if (js && !nodejs)
 import js.Browser.window;
@@ -12,7 +11,7 @@ using Reflect;
 #end
 
 class Animated extends AutoComponent {
-  public final keyframes:ReadonlySignal<Keyframes>;
+  @:readonly public final keyframes:Keyframes;
   public final dontAnimateInitial:Bool = false;
   public final dontRepeatCurrentAnimation:Bool = true;
   public final duration:Int;

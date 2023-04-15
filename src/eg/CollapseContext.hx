@@ -10,7 +10,7 @@ enum abstract CollapseContextStatus(Bool) {
   final Expanded = true;
 }
 
-class CollapseContext implements Record {
+class CollapseContext extends Record {
   public static function from(context:Component) {
     return switch CollapseContextProvider.maybeFrom(context) {
       case Some(collapse): collapse;
@@ -18,8 +18,8 @@ class CollapseContext implements Record {
     }
   }
 
-  public final status:Signal<CollapseContextStatus>;
   public final duration:Int = 200;
+  @:signal public final status:CollapseContextStatus;
 
   public function toggle() {
     switch status.peek() {

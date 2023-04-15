@@ -14,7 +14,8 @@ class Modal extends AutoComponent {
   final lockScroll:Bool = true;
 
   public function build():Component {
-    var portal = new Portal(PortalContext.from(this).getTarget(), () -> new Layer({
+    var target = PortalContext.from(this).getTarget();
+    var portal = new Portal(target, () -> new Layer({
       styles: layerStyles,
       hideOnEscape: hideOnEscape,
       onHide: onHide,

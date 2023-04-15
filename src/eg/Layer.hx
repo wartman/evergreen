@@ -22,7 +22,7 @@ class Layer extends AutoComponent {
 
   public function build() {
     return new LayerContextProvider({
-      create: () -> new LayerContext({}),
+      value: new LayerContext({}),
       build: layer -> {
         var body = new Html<'div'>({
           // @todo: Consider if we actually want this dependency

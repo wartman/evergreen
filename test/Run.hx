@@ -6,7 +6,7 @@ import examples.*;
 
 function main() {
   mount(Browser.document.getElementById('root'), () -> new PortalContextProvider({
-    create: () -> new PortalContext(Browser.document.getElementById('portal')),
+    value: new PortalContext(Browser.document.getElementById('portal')),
     build: portal -> new Html<'div'>({
       children: [
         new DropdownExample({}),

@@ -12,7 +12,7 @@ class Collapse extends AutoComponent {
 
   function build() {
     return new CollapseContextProvider({
-      create: () -> {
+      value: {
         var collapse = new CollapseContext({ 
           status: initialStatus,
           duration: duration
@@ -20,7 +20,7 @@ class Collapse extends AutoComponent {
         AccordionContext
           .maybeFrom(this)
           .ifExtract(Some(accordion), accordion.add(collapse));
-        return collapse;
+        collapse;
       },
       dispose: collapse -> {
         AccordionContext

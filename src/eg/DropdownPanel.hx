@@ -11,17 +11,16 @@ class DropdownPanel extends AutoComponent {
 
   function build() {
     #if (js && !nodejs)
-    var controller = createController(this);
     var document = js.Browser.document;
     
     onMount(() -> {
-      document.addEventListener('keydown', controller.onKeyDown);
-      document.addEventListener('click', controller.hide);
-      controller.maybeFocusFirst();
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('click', hide);
+      maybeFocusFirst();
     });
     onCleanup(() -> {
-      document.removeEventListener('keydown', controller.onKeyDown);
-      document.removeEventListener('click', controller.hide);
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('click', hide);
       FocusContext.from(this).returnFocus();
     });
     #end
@@ -36,24 +35,18 @@ class DropdownPanel extends AutoComponent {
       child: child
     });
   }
-}
-
-#if (js && !nodejs)
-private function createController(panel:DropdownPanel):{
-  hide:(e:js.html.Event)->Void,
-  onKeyDown:(e:js.html.KeyboardEvent)->Void,
-  maybeFocusFirst:()->Void
-} {
+  
+  #if (js && !nodejs)
   var current:Null<DropdownItem> = null;
 
   function hide(e:js.html.Event) {
     e.stopPropagation();
     e.preventDefault();
-    panel.onHide();
+    onHide();
   }
 
   function getNextFocusedChild(offset:Int):Maybe<Component> {
-    var items = panel.queryChildrenOfType(DropdownItem, true);
+    var items = queryChildrenOfType(DropdownItem, true);
     var index = Math.ceil(items.indexOf(current) + offset);
     var item = items[index];
     
@@ -69,7 +62,7 @@ private function createController(panel:DropdownPanel):{
     switch getNextFocusedChild(1) {
       case Some(item):
         var el:js.html.Element = item.getObject();
-        FocusContext.from(panel).focus(el);
+        FocusContext.from(this).focus(el);
       case None:
     }
   }
@@ -97,7 +90,7 @@ private function createController(panel:DropdownPanel):{
   }
 
   function onKeyDown(event:js.html.KeyboardEvent) {
-    // if (panel.getStatus() == Building || panel.getStatus() == Disposed) return;
+    if (isComponentBuilding() || isComponentDisposed()) return;
 
     switch event.key {
       case 'Escape': 
@@ -115,11 +108,5 @@ private function createController(panel:DropdownPanel):{
       default:
     }
   }
-
-  return {
-    hide: hide,
-    onKeyDown: onKeyDown,
-    maybeFocusFirst: maybeFocusFirst
-  };
+  #end
 }
-#end

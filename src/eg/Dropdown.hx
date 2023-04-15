@@ -14,8 +14,6 @@ class Dropdown extends AutoComponent {
   function build() {
     return new DropdownContextProvider({
       create: () -> new DropdownContext({ status: status, attachment: attachment }),
-      // dispose: dropdown -> dropdown.dispose(),
-      dispose: _ -> null,
       build: dropdown -> new DropdownContainer({
         children: [
           new DropdownToggle({ child: toggle(dropdown) }),

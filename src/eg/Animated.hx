@@ -23,12 +23,14 @@ class Animated extends AutoComponent {
 
   function build() {
     #if (js && !nodejs)
-    var animation = createAnimationController();
     var first = true;
     effect(() -> {
-      animation.registerAnimation(this, first);
+      registerAnimation(first);
       first = false;
-      return () -> animation.dispose();
+      return () -> if (currentAnimation != null) {
+        currentAnimation.cancel();
+        currentAnimation = null;
+      }
     });
     onCleanup(() -> {
       if (onDispose != null) onDispose(this);
@@ -36,30 +38,19 @@ class Animated extends AutoComponent {
     #end
     return child;
   }
-}
 
-#if (js && !nodejs)
-private typedef AnimationOptions = {
-  public final duration:Int;
-  public final ?easing:String;
-  public final ?iterations:Float;
-}
-
-private function createAnimationController() {
+  #if (js && !nodejs)
   var currentKeyframes:Null<Keyframes> = null;
   var currentAnimation:Null<Animation> = null;
 
-  function registerAnimation(animated:Animated, first:Bool = false) {
-    // switch animated.getStatus() {
-    //   case Disposing | Disposed: return;
-    //   default:
-    // }
+  function registerAnimation(first:Bool = false) {
+    if (isComponentDisposing() || isComponentDisposed()) return;
 
-    var el:Element = animated.getObject();
-    var duration = if (first && animated.dontAnimateInitial) 0 else animated.duration;
-    var keyframes = animated.keyframes.get();
+    var el:Element = getObject();
+    var duration = if (first && dontAnimateInitial) 0 else duration;
+    var keyframes = keyframes();
 
-    if (animated.dontRepeatCurrentAnimation) {
+    if (dontRepeatCurrentAnimation) {
       if (currentKeyframes != null && currentKeyframes.equals(keyframes)) {
         return;
       }
@@ -74,20 +65,23 @@ private function createAnimationController() {
     
     function onFinished() {
       currentAnimation = null;
-      if (animated.onFinished != null) animated.onFinished(animated);
+      if (this.onFinished != null) this.onFinished(this);
     }
 
-    currentAnimation = registerAnimations(el, keyframes.create(animated), {
+    currentAnimation = registerAnimations(el, keyframes.create(this), {
       duration: duration,
-      easing: animated.easing,
-      iterations: if (animated.infinite) Math.POSITIVE_INFINITY else 1
+      easing: easing,
+      iterations: if (infinite) Math.POSITIVE_INFINITY else 1
     }, onFinished);
   }
+  #end
+}
 
-  return {
-    registerAnimation: registerAnimation,
-    dispose: () -> if (currentAnimation != null) currentAnimation.cancel()
-  };
+#if (js && !nodejs)
+private typedef AnimationOptions = {
+  public final duration:Int;
+  public final ?easing:String;
+  public final ?iterations:Float;
 }
 
 private function registerAnimations(el:Element, keyframes:Array<Dynamic>, options:AnimationOptions, onFinished:()->Void):Animation {

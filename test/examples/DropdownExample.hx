@@ -19,10 +19,10 @@ class DropdownExample extends AutoComponent {
               dropdown.toggle();
             },
             children: [
-              new Text(compute(() -> switch dropdown.status() {
+              dropdown.status.map(status -> switch status {
                 case Open: 'Close Dropdown';
                 case Closed: 'Open Dropdown';
-              }))
+              })
             ]
           }),
           body: _ -> new Html<'ul'>({

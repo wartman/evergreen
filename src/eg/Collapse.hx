@@ -26,7 +26,7 @@ class Collapse extends AutoComponent {
         AccordionContext
           .maybeFrom(this)
           .ifExtract(Some(accordion), accordion.remove(collapse));
-        // collapse.dispose();
+        collapse.dispose();
       },
       build: _ -> child 
     });

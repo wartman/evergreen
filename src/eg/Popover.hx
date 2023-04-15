@@ -11,7 +11,8 @@ class Popover extends AutoComponent {
   final getTarget:Null<()->Dynamic> = null;
 
   function build() {
-    return new Portal(PortalContext.from(this).getTarget(), () -> new Positioned({
+    var target = PortalContext.from(this).getTarget();
+    return new Portal(target, () -> new Positioned({
       getTarget: getTarget ?? () -> findAncestorOfType(ObjectComponent)
         .map(parent -> parent.getObject())
         .orThrow('No parent object'),

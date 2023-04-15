@@ -43,7 +43,7 @@ class Layer extends AutoComponent {
               overflowY: 'scroll',
             })
           ]),
-          onclick: e -> if (hideOnClick) {
+          onClick: e -> if (hideOnClick) {
             e.preventDefault();
             layer.hide();
           },

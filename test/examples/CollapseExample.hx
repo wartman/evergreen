@@ -31,7 +31,7 @@ class ExampleCollapseHeader extends AutoComponent {
     var collapse = CollapseContext.from(this);
 
     return new Html<'button'>({
-      onclick: _ -> collapse.toggle(),
+      onClick: _ -> collapse.toggle(),
       // `collapse.status` is a State, so we can observe it
       // for changes. In a real implementation, this might be
       // where you have a chevron icon rotate or otherwise

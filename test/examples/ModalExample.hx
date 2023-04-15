@@ -13,7 +13,7 @@ class ModalExample extends AutoComponent {
     return new Html<'div'>({
       children: [
         new Html<'button'>({
-          onclick: e -> isOpen.set(true),
+          onClick: e -> isOpen.set(true),
           children: 'Open Modal'
         }),
         new Show(isOpen, () -> new Modal({
@@ -35,7 +35,7 @@ class ModalExample extends AutoComponent {
               children: 'Hey world'
             }),
             new Scope(context -> new Html<'button'>({
-              onclick: _ -> LayerContext.from(context).hide(),
+              onClick: _ -> LayerContext.from(context).hide(),
               children: 'Ok'
             }))
           ]

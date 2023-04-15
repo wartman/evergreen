@@ -11,17 +11,16 @@ class Collapse extends AutoComponent {
   final duration:Int = 200;
 
   function build() {
+    var collapse = new CollapseContext({ 
+      status: initialStatus,
+      duration: duration
+    });
+    AccordionContext
+      .maybeFrom(this)
+      .ifExtract(Some(accordion), accordion.add(collapse));
+
     return new CollapseContextProvider({
-      value: {
-        var collapse = new CollapseContext({ 
-          status: initialStatus,
-          duration: duration
-        });
-        AccordionContext
-          .maybeFrom(this)
-          .ifExtract(Some(accordion), accordion.add(collapse));
-        collapse;
-      },
+      value: collapse,
       dispose: collapse -> {
         AccordionContext
           .maybeFrom(this)

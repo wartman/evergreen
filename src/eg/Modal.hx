@@ -24,7 +24,7 @@ class Modal extends AutoComponent {
           'eg-modal-container',
           styles
         ]),
-        onclick: e -> e.stopPropagation(),
+        onClick: e -> e.stopPropagation(),
         ariaModal: 'true',
         tabIndex: -1,
         role: 'dialog',

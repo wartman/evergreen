@@ -13,7 +13,7 @@ class DropdownExample extends AutoComponent {
       children: [
         new Dropdown({
           toggle: dropdown -> new Html<'button'>({
-            onclick: e -> {
+            onClick: e -> {
               e.preventDefault();
               e.stopPropagation();
               dropdown.toggle();
@@ -26,7 +26,7 @@ class DropdownExample extends AutoComponent {
             ]
           }),
           body: _ -> new Html<'ul'>({
-            onclick: e -> e.stopPropagation(),
+            onClick: e -> e.stopPropagation(),
             className: Css.atoms({
               padding: 1.em(),
               background: rgb(255, 255, 255),
@@ -72,7 +72,7 @@ class ExampleDropdownItem extends AutoComponent {
         // use DropdownItems.
         new DropdownItem({
           child: new Html<'a'>({
-            onclick: e -> {
+            onClick: e -> {
               e.preventDefault();
               // Note: Something like this is required to
               // auto-close the dropdown when an option is 

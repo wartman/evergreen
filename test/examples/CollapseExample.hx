@@ -1,8 +1,9 @@
 package examples;
 
+import eg.*;
 import pine.*;
 import pine.html.*;
-import eg.*;
+import pine.signal.Computation;
 
 using Nuke;
 
@@ -38,7 +39,7 @@ class ExampleCollapseHeader extends AutoComponent {
       // indicate a collapsed/expanded status.
       children: [
         child,
-        new Text(compute(() -> switch collapse.status() {
+        new Text(new Computation(() -> switch collapse.status() {
           case Collapsed: ' +';
           case Expanded: ' -';
         }))

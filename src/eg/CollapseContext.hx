@@ -1,7 +1,6 @@
 package eg;
 
 import pine.*;
-import pine.signal.*;
 
 typedef CollapseContextProvider = Provider<CollapseContext>;
 

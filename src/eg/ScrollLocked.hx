@@ -20,7 +20,7 @@ class ScrollLocked extends AutoComponent {
         body.style.paddingRight = '${offset}px';
       }
     });
-    onCleanup(() -> {
+    addDisposable(() -> {
       body.style.overflow = null;
       body.style.paddingRight = null;
     });

@@ -27,7 +27,7 @@ class LayerContainer extends AutoComponent {
         .getObject();
       FocusContext.from(this).focus(obj);
     });
-    onCleanup(() -> {
+    addDisposable(() -> {
       document.removeEventListener('keydown', onEscape);
       FocusContext.from(this).returnFocus();
     });

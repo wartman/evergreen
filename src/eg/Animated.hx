@@ -11,7 +11,7 @@ using Reflect;
 #end
 
 class Animated extends AutoComponent {
-  @:readonly public final keyframes:Keyframes;
+  @:observable public final keyframes:Keyframes;
   public final dontAnimateInitial:Bool = false;
   public final dontRepeatCurrentAnimation:Bool = true;
   public final duration:Int;
@@ -24,7 +24,7 @@ class Animated extends AutoComponent {
   function build() {
     #if (js && !nodejs)
     var first = true;
-    effect(() -> {
+    addEffect(() -> {
       registerAnimation(first);
       first = false;
       return () -> if (currentAnimation != null) {
@@ -32,7 +32,7 @@ class Animated extends AutoComponent {
         currentAnimation = null;
       }
     });
-    onCleanup(() -> {
+    addDisposable(() -> {
       if (onDispose != null) onDispose(this);
     });
     #end

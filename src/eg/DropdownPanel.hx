@@ -18,7 +18,7 @@ class DropdownPanel extends AutoComponent {
       document.addEventListener('click', hide);
       maybeFocusFirst();
     });
-    onCleanup(() -> {
+    addDisposable(() -> {
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('click', hide);
       FocusContext.from(this).returnFocus();

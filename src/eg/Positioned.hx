@@ -21,7 +21,7 @@ class Positioned extends AutoComponent {
 
       positionElement();
     });
-    onCleanup(() -> {
+    addDisposable(() -> {
       window.removeEventListener('resize', positionElement);
       window.removeEventListener('scroll', positionElement);
     });

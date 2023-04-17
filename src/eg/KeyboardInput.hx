@@ -67,7 +67,7 @@ class KeyboardInput extends AutoComponent {
 
       document.addEventListener('keydown', listener);
     });
-    onCleanup(() -> document.removeEventListener('keydown', listener));
+    addDisposable(() -> document.removeEventListener('keydown', listener));
     #end
     
     return child;

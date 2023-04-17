@@ -50,7 +50,7 @@ class Layer extends AutoComponent {
           children: new LayerTarget({ child: child })
         });
         var animation = new Animated({
-          keyframes: compute(() -> switch layer.status() { 
+          keyframes: layer.status.map(status -> switch status { 
             case Showing: 
               showAnimation;
             case Hiding: 

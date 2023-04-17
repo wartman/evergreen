@@ -15,7 +15,7 @@ class CollapseItem extends AutoComponent {
  
     return new Animated({
       dontAnimateInitial: true,
-      keyframes: compute(() -> switch collapse.status() {
+      keyframes: collapse.status.map(status -> switch status {
         case Collapsed: new Keyframes('in', context -> [
           { height: getHeight(context), offset: 0 },
           { height: 0, offset: 1 }

@@ -23,7 +23,7 @@ class Layer extends AutoComponent {
   public function build() {
     return new LayerContextProvider({
       value: new LayerContext({}),
-      build: layer -> {
+      child: layer -> {
         var body = new Html<'div'>({
           // @todo: Consider if we actually want this dependency
           // on Nuke in here. It might be OK if the layer has 

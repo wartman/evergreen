@@ -8,13 +8,13 @@ using Nuke;
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };
   final toggle:(context:DropdownContext)->Child;
-  final body:(context:DropdownContext)->Child;
+  final child:(context:DropdownContext)->Child;
   final status:DropdownStatus = Closed;
 
   function build() {
     return new DropdownContextProvider({
       value: new DropdownContext({ status: status, attachment: attachment }),
-      build: dropdown -> new DropdownContainer({
+      child: dropdown -> new DropdownContainer({
         children: [
           new DropdownToggle({ child: toggle(dropdown) }),
           new Scope(_ -> switch dropdown.status() {
@@ -22,7 +22,7 @@ class Dropdown extends AutoComponent {
               new DropdownPanel({
                 onHide: () -> dropdown.close(),
                 attachment: attachment,
-                child: body(dropdown)
+                child: child(dropdown)
               });
             case Closed:
               new Placeholder();

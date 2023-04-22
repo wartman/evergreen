@@ -25,7 +25,7 @@ class DropdownExample extends AutoComponent {
               })
             ]
           }),
-          body: _ -> new Html<'ul'>({
+          child: _ -> new Html<'ul'>({
             onClick: e -> e.stopPropagation(),
             className: Css.atoms({
               padding: 1.em(),

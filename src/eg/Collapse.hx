@@ -27,7 +27,7 @@ class Collapse extends AutoComponent {
           .ifExtract(Some(accordion), accordion.remove(collapse));
         collapse.dispose();
       },
-      build: _ -> child 
+      child: _ -> child 
     });
   }
 }

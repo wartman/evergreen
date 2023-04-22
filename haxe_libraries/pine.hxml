@@ -1,4 +1,4 @@
-# @install: lix --silent download "gh://github.com/wartman/pine#97096d9b1fcb39ba7154f642f291e432f608d11f" into pine/0.1.0-alpha.2/github/97096d9b1fcb39ba7154f642f291e432f608d11f
+# @install: lix --silent download "gh://github.com/wartman/pine#f9d35fc29b4f0bad5a79f89e64bd6de6cd16769c" into pine/0.1.0-alpha.2/github/f9d35fc29b4f0bad5a79f89e64bd6de6cd16769c
 -lib kit
--cp ${HAXE_LIBCACHE}/pine/0.1.0-alpha.2/github/97096d9b1fcb39ba7154f642f291e432f608d11f/src
+-cp ${HAXE_LIBCACHE}/pine/0.1.0-alpha.2/github/f9d35fc29b4f0bad5a79f89e64bd6de6cd16769c/src
 -D pine=0.1.0-alpha.2

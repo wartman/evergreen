@@ -11,14 +11,14 @@ using Reflect;
 #end
 
 class Animated extends AutoComponent {
-  @:observable public final keyframes:Keyframes;
-  public final dontAnimateInitial:Bool = false;
-  public final dontRepeatCurrentAnimation:Bool = true;
-  public final duration:Int;
-  public final infinite:Bool = false;
-  public final easing:String = 'linear';
-  public final onFinished:(context:Component)->Void = null;
-  public final onDispose:(context:Component)->Void = null;
+  @:observable final keyframes:Keyframes;
+  final dontAnimateInitial:Bool = false;
+  final dontRepeatCurrentAnimation:Bool = true;
+  final duration:Int;
+  final infinite:Bool = false;
+  final easing:String = 'linear';
+  final onFinished:(context:Component)->Void = null;
+  final onDispose:(context:Component)->Void = null;
   final child:Child;
 
   function build() {

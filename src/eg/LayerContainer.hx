@@ -6,7 +6,7 @@ import pine.*;
 using Nuke;
 
 class LayerContainer extends AutoComponent {
-  public final hideOnEscape:Bool;
+  final hideOnEscape:Bool;
   final child:Child;
 
   function build() {

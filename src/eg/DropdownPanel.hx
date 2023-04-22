@@ -5,7 +5,7 @@ import pine.*;
 using Kit;
 
 class DropdownPanel extends AutoComponent {
-  public final onHide:()->Void;
+  final onHide:()->Void;
   final attachment:PositionedAttachment;
   final child:Child;
 

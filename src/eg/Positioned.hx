@@ -3,8 +3,8 @@ package eg;
 import pine.*;
 
 class Positioned extends AutoComponent {
-  public final getTarget:()->Dynamic;
-  public final attachment:PositionedAttachment;
+  final getTarget:()->Dynamic;
+  final attachment:PositionedAttachment;
   final child:Child;
 
   function build() {

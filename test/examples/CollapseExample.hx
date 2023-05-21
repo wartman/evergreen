@@ -2,17 +2,18 @@ package examples;
 
 import breeze.rule.Background;
 import breeze.rule.Layout;
-import breeze.rule.Spacing.pad;
+import breeze.rule.Spacing;
+import breeze.rule.Typography;
 import eg.*;
 import pine.*;
 import pine.html.*;
 import pine.signal.Computation;
+import system.Panel;
 
 class CollapseExample extends AutoComponent {
   function build() {
     return new Collapse({
-      child: new Html<'div'>({
-        className: bgColor('#ccc'),
+      child: new Panel({
         children: [
           new ExampleCollapseHeader({ child: 'Collapse' }),
           new ExampleCollapseBody({
@@ -31,6 +32,7 @@ class ExampleCollapseHeader extends AutoComponent {
     var collapse = CollapseContext.from(this);
 
     return new Html<'button'>({
+      className: fontWeight('bold'),
       onClick: _ -> collapse.toggle(),
       // `collapse.status` is a State, so we can observe it
       // for changes. In a real implementation, this might be

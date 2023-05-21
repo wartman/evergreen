@@ -1,5 +1,9 @@
 package examples;
 
+import breeze.rule.Layout.layer;
+import breeze.rule.Filter.dropShadow;
+import breeze.ClassName;
+import breeze.rule.Sizing;
 import breeze.rule.Background;
 import breeze.rule.Border;
 import breeze.rule.Spacing;
@@ -7,46 +11,50 @@ import eg.*;
 import pine.*;
 import pine.html.*;
 import pine.html.HtmlEvents;
+import system.Button;
+import system.Panel;
 
 class DropdownExample extends AutoComponent {
   function build() {
     return new Html<'div'>({
       children: [
         new Dropdown({
-          toggle: dropdown -> new Html<'button'>({
-            onClick: e -> {
+          toggle: dropdown -> new Button({
+            action: e -> {
               e.preventDefault();
               e.stopPropagation();
               dropdown.toggle();
             },
-            children: [
-              dropdown.status.map(status -> switch status {
-                case Open: 'Close Dropdown';
-                case Closed: 'Open Dropdown';
-              })
-            ]
+            label: dropdown.status.map(status -> switch status {
+              case Open: 'Close Dropdown';
+              case Closed: 'Open Dropdown';
+            })
           }),
-          child: _ -> new Html<'ul'>({
-            onClick: e -> e.stopPropagation(),
-            className: pad(1)
-              .with(bgColor('white', 0))
-              .with(borderWidth('1px'))
-              .with(borderStyle('solid'))
-              .with(borderColor('black', 0)),
-            children: [
-              new ExampleDropdownItem({
-                onClick: _ -> trace('one'),
-                child: 'One'
-              }),
-              new ExampleDropdownItem({
-                onClick: _ -> trace('two'),
-                child: 'Two'
-              }),
-              new ExampleDropdownItem({
-                onClick: _ -> trace('three'),
-                child: 'Three'
-              }),
-            ]
+          child: _ -> new Panel({
+            styles: ClassName.ofArray([
+              bgColor('white', 0),
+              width('min', '50px'),
+              layer(10),
+              dropShadow('xl')
+            ]),
+            children: new Html<'ul'>({
+              onClick: e -> e.stopPropagation(),
+              className: pad(1),
+              children: [
+                new ExampleDropdownItem({
+                  onClick: _ -> trace('one'),
+                  child: 'One'
+                }),
+                new ExampleDropdownItem({
+                  onClick: _ -> trace('two'),
+                  child: 'Two'
+                }),
+                new ExampleDropdownItem({
+                  onClick: _ -> trace('three'),
+                  child: 'Three'
+                }),
+              ]
+            })
           })
         })
       ]

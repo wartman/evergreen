@@ -19,7 +19,7 @@ class AnimatedExample extends AutoComponent {
       onFinished: _ -> trace('ok'),
       child: new Html<'div'>({
         className: ClassName.ofArray([
-          bgColor('black', 0),
+          bgColor('red', 500),
           height('30px'),
           width('30px')
         ])

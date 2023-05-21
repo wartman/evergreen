@@ -3,11 +3,9 @@ package eg;
 import pine.*;
 import pine.html.*;
 
-using Nuke;
-
 class Modal extends AutoComponent {
-  final styles:ClassName = null;
-  final layerStyles:ClassName = null;
+  final styles:String = null;
+  final layerStyles:String = null;
   final onHide:()->Void;
   final children:Children;
   final hideOnEscape:Bool = true;
@@ -20,10 +18,10 @@ class Modal extends AutoComponent {
       hideOnEscape: hideOnEscape,
       onHide: onHide,
       child: new Html<'div'>({
-        className: ClassName.ofArray([
+        className: [
           'eg-modal-container',
           styles
-        ]),
+        ].filter(s -> s != null).join(' '),
         onClick: e -> e.stopPropagation(),
         ariaModal: 'true',
         tabIndex: -1,

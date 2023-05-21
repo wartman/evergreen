@@ -3,8 +3,6 @@ package eg;
 import eg.Layer;
 import pine.*;
 
-using Nuke;
-
 class LayerContainer extends AutoComponent {
   final hideOnEscape:Bool;
   final child:Child;

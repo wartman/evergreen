@@ -1,11 +1,12 @@
 package examples;
 
+import breeze.rule.Background;
+import breeze.rule.Border;
+import breeze.rule.Spacing;
+import eg.*;
 import pine.*;
 import pine.html.*;
 import pine.html.HtmlEvents;
-import eg.*;
-
-using Nuke;
 
 class DropdownExample extends AutoComponent {
   function build() {
@@ -27,11 +28,11 @@ class DropdownExample extends AutoComponent {
           }),
           child: _ -> new Html<'ul'>({
             onClick: e -> e.stopPropagation(),
-            className: Css.atoms({
-              padding: 1.em(),
-              background: rgb(255, 255, 255),
-              border: [ 1.px(), 'solid', rgb(0, 0, 0) ]
-            }),
+            className: pad(1)
+              .with(bgColor('white', 0))
+              .with(borderWidth('1px'))
+              .with(borderStyle('solid'))
+              .with(borderColor('black', 0)),
             children: [
               new ExampleDropdownItem({
                 onClick: _ -> trace('one'),

@@ -1,10 +1,14 @@
 package examples;
 
+import breeze.rule.Background;
+import breeze.rule.Border;
+import breeze.rule.Flex;
+import breeze.rule.Layout;
+import breeze.rule.Sizing;
+import breeze.rule.Spacing;
+import eg.*;
 import pine.*;
 import pine.html.*;
-import eg.*;
-
-using Nuke;
 
 class ModalExample extends AutoComponent {
   @:signal final isOpen:Bool = false;
@@ -17,18 +21,16 @@ class ModalExample extends AutoComponent {
           children: 'Open Modal'
         }),
         new Show(isOpen, () -> new Modal({
-          styles: Css.atoms({
-            padding: 1.em(),
-            background: rgb(255, 255, 255),
-            width: 250.px(),
-            border: [ 1.px(), 'solid', rgb(0, 0, 0) ]
-          }),
-          layerStyles: Css.atoms({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: rgba(0, 0, 0, 0.5)
-          }),
+          styles: pad(1)
+            .with(bgColor('white', 0))
+            .with(width('250px'))
+            .with(borderWidth(1))
+            .with(borderStyle('solid'))
+            .with(borderColor('black', 0)),
+          layerStyles: display('flex')
+            .with(alignItems('center'))
+            .with(justify('center'))
+            .with(bgColor('rgba(0,0,0,0.5)')),
           onHide: () -> isOpen.set(false),
           children: [
             new Html<'div'>({

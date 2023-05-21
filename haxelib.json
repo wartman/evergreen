@@ -1,0 +1,12 @@
+{
+  "name": "evergreen",
+  "description": "Unstyled elements for Pine",
+  "license": "MIT",
+  "classPath": "src",
+  "contributors": ["wartman"],
+  "version": "0.0.1",
+  "releasenote": "Pre-alpha",
+  "dependencies": {
+    "pine": "0.2.0"
+  }
+}

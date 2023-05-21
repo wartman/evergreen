@@ -1,10 +1,11 @@
 package examples;
 
+import breeze.ClassName;
+import breeze.rule.Background;
+import breeze.rule.Sizing;
+import eg.*;
 import pine.*;
 import pine.html.*;
-import eg.*;
-
-using Nuke;
 
 class AnimatedExample extends AutoComponent {
   function build() {
@@ -17,11 +18,11 @@ class AnimatedExample extends AutoComponent {
       infinite: true,
       onFinished: _ -> trace('ok'),
       child: new Html<'div'>({
-        className: Css.atoms({
-          background: 'black',
-          height: 30.px(),
-          width: 30.px()
-        })
+        className: ClassName.ofArray([
+          bgColor('black', 0),
+          height('30px'),
+          width('30px')
+        ])
       })
     });
   }

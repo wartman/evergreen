@@ -1,19 +1,18 @@
 package examples;
 
+import breeze.rule.Background;
+import breeze.rule.Layout;
+import breeze.rule.Spacing.pad;
 import eg.*;
 import pine.*;
 import pine.html.*;
 import pine.signal.Computation;
 
-using Nuke;
-
 class CollapseExample extends AutoComponent {
   function build() {
     return new Collapse({
       child: new Html<'div'>({
-        className: Css.atoms({
-          backgroundColor: '#ccc'
-        }),
+        className: bgColor('#ccc'),
         children: [
           new ExampleCollapseHeader({ child: 'Collapse' }),
           new ExampleCollapseBody({
@@ -54,22 +53,19 @@ class ExampleCollapseBody extends AutoComponent {
   function build() {
     return new CollapseItem({
       child: new Html<'div'>({
-        className: Css.atoms({
+        className:
           // Note: Setting overflow to 'hidden' is required for 
           // the Collapse to work properly.
-          overflow: 'hidden',
+          overflow('hidden')
           // Also setting box-sizing to `border-box` will make things
           // work much better, as the padding will be included in
           // when the Component calculates the size of the element.
-          boxSizing: 'border-box'
-        }),
+          .with(boxSizing('border')),
         children: new Html<'div'>({
-          className: Css.atoms({
-            // Note that we do NOT put the padding in the
-            // main collapse target, as this will result in the collapsed
-            // element still being visible even if its height is `0`.
-            padding: 15.px()
-          }),
+          // Note that we do NOT put the padding in the
+          // main collapse target, as this will result in the collapsed
+          // element still being visible even if its height is `0`.
+          className: pad('15px'),
           children: children
         })
       })

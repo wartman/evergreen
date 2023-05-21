@@ -3,8 +3,6 @@ package eg;
 import pine.*;
 import eg.DropdownContext;
 
-using Nuke;
-
 class Dropdown extends AutoComponent {
   final attachment:PositionedAttachment = { h: Middle, v: Bottom };
   final toggle:(context:DropdownContext)->Child;

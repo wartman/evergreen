@@ -4,8 +4,6 @@ import eg.LayerContext;
 import pine.*;
 import pine.html.*;
 
-using Nuke;
-
 final DefaultShowAnimation = new Keyframes('show', context -> [ { opacity: 0 }, { opacity: 1 } ]);
 final DefaultHideAnimation = new Keyframes('hide', context -> [ { opacity: 1 }, { opacity: 0 } ]);
 
@@ -16,7 +14,7 @@ class Layer extends AutoComponent {
   final hideOnEscape:Bool = true;
   final child:Child;
   final transitionSpeed:Int = 150;
-  final styles:ClassName = null;
+  final styles:String = null;
   final showAnimation:Keyframes = DefaultShowAnimation;
   final hideAnimation:Keyframes = DefaultHideAnimation;
 
@@ -25,24 +23,8 @@ class Layer extends AutoComponent {
       value: new LayerContext({}),
       child: layer -> {
         var body = new Html<'div'>({
-          // @todo: Consider if we actually want this dependency
-          // on Nuke in here. It might be OK if the layer has 
-          // no classes.
-          className: ClassName.ofArray([
-            'eg-layer',
-            styles,
-            // Note: We *do* actually want to define a few 
-            // styles here, as this is just how Layers work.
-            Css.atoms({
-              position: 'fixed',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              overflowX: 'hidden',
-              overflowY: 'scroll',
-            })
-          ]),
+          className: [ 'eg-layer', styles ].filter(s -> s != null).join(' '),
+          style: 'position:fixed;top:0;bottom:0;left:0;right:0;overflowX:hidden;overflowY:scroll;',
           onClick: e -> if (hideOnClick) {
             e.preventDefault();
             layer.hide();

@@ -1,18 +1,13 @@
 package examples;
 
-import breeze.rule.Layout.layer;
-import breeze.rule.Filter.dropShadow;
-import breeze.ClassName;
-import breeze.rule.Sizing;
-import breeze.rule.Background;
-import breeze.rule.Border;
-import breeze.rule.Spacing;
 import eg.*;
 import pine.*;
 import pine.html.*;
 import pine.html.HtmlEvents;
 import system.Button;
 import system.Panel;
+
+using Breeze;
 
 class DropdownExample extends AutoComponent {
   function build() {
@@ -32,14 +27,14 @@ class DropdownExample extends AutoComponent {
           }),
           child: _ -> new Panel({
             styles: ClassName.ofArray([
-              bgColor('white', 0),
-              width('min', '50px'),
-              layer(10),
-              dropShadow('xl')
+              Background.color('white', 0),
+              Sizing.width('min', '50px'),
+              Layout.layer(10),
+              Filter.dropShadow('xl')
             ]),
             children: new Html<'ul'>({
               onClick: e -> e.stopPropagation(),
-              className: pad(1),
+              className: Spacing.pad(1),
               children: [
                 new ExampleDropdownItem({
                   onClick: _ -> trace('one'),

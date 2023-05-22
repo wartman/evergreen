@@ -1,11 +1,10 @@
 package examples;
 
-import breeze.ClassName;
-import breeze.rule.Background;
-import breeze.rule.Sizing;
 import eg.*;
 import pine.*;
 import pine.html.*;
+
+using Breeze;
 
 class AnimatedExample extends AutoComponent {
   function build() {
@@ -19,9 +18,9 @@ class AnimatedExample extends AutoComponent {
       onFinished: _ -> trace('ok'),
       child: new Html<'div'>({
         className: ClassName.ofArray([
-          bgColor('red', 500),
-          height('30px'),
-          width('30px')
+          Background.color('red', 500),
+          Sizing.height('30px'),
+          Sizing.width('30px')
         ])
       })
     });

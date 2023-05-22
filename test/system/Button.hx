@@ -1,13 +1,10 @@
 package system;
 
-import breeze.ClassName;
-import breeze.rule.Background;
-import breeze.rule.Border;
-import breeze.rule.Spacing;
-import breeze.rule.Typography;
 import pine.*;
 import pine.html.*;
 import pine.html.HtmlEvents;
+
+using Breeze;
 
 enum ButtonPriority {
   Primary;
@@ -22,15 +19,15 @@ class Button extends AutoComponent {
   function build() {
     return new Html<'button'>({
       className: ClassName.ofArray([
-        borderRadius(2),
-        pad('y', 1),
-        pad('x', 3),
-        fontWeight('bold'),
-        borderStyle('solid'),
-        borderWidth(.5),
-        borderColor('black', 0),
+        Border.radius(2),
+        Spacing.pad('y', 1),
+        Spacing.pad('x', 3),
+        Typography.fontWeight('bold'),
+        Border.style('solid'),
+        Border.width(.5),
+        Border.color('black', 0),
         switch priority {
-          case Primary: bgColor('sky', 200);
+          case Primary: Background.color('sky', 200);
           case Normal: null;
         }
       ]),

@@ -1,10 +1,9 @@
 package system;
 
-import breeze.ClassName;
-import breeze.rule.Border;
-import breeze.rule.Spacing;
 import pine.*;
 import pine.html.*;
+
+using Breeze;
 
 class Panel extends AutoComponent {
   final styles:ClassName = null;
@@ -13,10 +12,10 @@ class Panel extends AutoComponent {
   function build() {
     return new Html<'div'>({
       className: ClassName.ofArray([
-        borderRadius(2),
-        borderColor('black', 0),
-        borderWidth(.5),
-        pad(4),
+        Border.radius(2),
+        Border.color('black', 0),
+        Border.width(.5),
+        Spacing.pad(4),
         styles
       ]),
       children: children

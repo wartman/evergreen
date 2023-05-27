@@ -18,11 +18,11 @@ class Button extends AutoComponent {
 
   function build() {
     return new Html<'button'>({
-      className: ClassName.ofArray([
-        Border.radius(2),
+      className: Breeze.compose(
         Spacing.pad('y', 1),
         Spacing.pad('x', 3),
         Typography.fontWeight('bold'),
+        Border.radius(2),
         Border.style('solid'),
         Border.width(.5),
         Border.color('black', 0),
@@ -30,7 +30,7 @@ class Button extends AutoComponent {
           case Primary: Background.color('sky', 200);
           case Normal: null;
         }
-      ]),
+      ),
       onClick: action,
       children: [ label ]
     });

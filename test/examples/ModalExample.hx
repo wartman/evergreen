@@ -19,18 +19,20 @@ class ModalExample extends AutoComponent {
           label: 'Open Modal'
         }),
         new Show(isOpen, () -> new Modal({
-          styles: ClassName.ofArray([
+          styles: Breeze.compose(
             Background.color('white', 0),
             Sizing.width('250px'),
             Border.radius(2),
             Border.color('black', 0),
             Border.width(.5),
-            Spacing.pad(4),
-          ]),
-          layerStyles: Flex.display()
-            .with(Flex.alignItems('center'))
-            .with(Flex.justify('center'))
-            .with(Background.color('rgba(0,0,0,0.5)')),
+            Spacing.pad(4)
+          ),
+          layerStyles: Breeze.compose(
+            Flex.display(),
+            Flex.alignItems('center'),
+            Flex.justify('center'),
+            Background.color('rgba(0,0,0,0.5)')
+          ),
           onHide: () -> isOpen.set(false),
           children: [
             new Html<'div'>({

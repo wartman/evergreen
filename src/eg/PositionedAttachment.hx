@@ -15,4 +15,6 @@ enum PositionedAttachmentHorizontal {
   Left;
   Right;
   Middle;
+  MatchLeft;
+  MatchRight;
 }

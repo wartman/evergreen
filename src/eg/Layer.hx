@@ -24,7 +24,7 @@ class Layer extends AutoComponent {
       child: layer -> {
         var body = new Html<'div'>({
           className: [ 'eg-layer', styles ].filter(s -> s != null).join(' '),
-          style: 'position:fixed;top:0;bottom:0;left:0;right:0;overflowX:hidden;overflowY:scroll;',
+          style: 'position:fixed;inset:0px;overflow-x:hidden;overflow-y:scroll;',
           onClick: e -> if (hideOnClick) {
             e.preventDefault();
             layer.hide();

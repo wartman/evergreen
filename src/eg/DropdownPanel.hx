@@ -6,6 +6,7 @@ using Kit;
 
 class DropdownPanel extends AutoComponent {
   final onHide:()->Void;
+  final gap:Int;
   final attachment:PositionedAttachment;
   final child:Child;
 
@@ -31,6 +32,7 @@ class DropdownPanel extends AutoComponent {
         .findChildOfType(DropdownToggle, true)
         .orThrow('No dropdown toggle')
         .getObject(),
+      gap: gap,
       attachment: attachment,
       child: child
     });

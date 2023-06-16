@@ -5,6 +5,7 @@ import pine.*;
 class Positioned extends AutoComponent {
   final getTarget:()->Dynamic;
   final attachment:PositionedAttachment;
+  final gap:Int = 0;
   final child:Child;
 
   function build() {
@@ -52,7 +53,11 @@ class Positioned extends AutoComponent {
       case Right: 
         targetRect.right;
       case Left: 
-        (targetRect.left) - el.offsetWidth;
+        targetRect.left - el.offsetWidth;
+      case MatchLeft:
+        targetRect.left;
+      case MatchRight:
+        (targetRect.right) - el.offsetWidth;
       case Middle:
         (targetRect.left)
           + (target.offsetWidth / 2)
@@ -74,15 +79,27 @@ class Positioned extends AutoComponent {
         0;
     }
   
-    if (overflowsHorizontal(left, el.offsetWidth)) left = switch hAttachment {
-      case Right:
-        (targetRect.right) - el.offsetWidth;
-      case Left:
-        0;
-      case Middle if (left > 0):
-        (targetRect.right) - el.offsetWidth;
-      case Middle:
-        0;
+    if (overflowsHorizontal(left, el.offsetWidth)) {
+      left = switch hAttachment {
+        case Right | MatchRight:
+          (targetRect.right) - el.offsetWidth;
+        case Left | MatchLeft:
+          0;
+        case Middle if (left > 0):
+          (targetRect.right) - el.offsetWidth;
+        case Middle:
+          0;
+      }
+    }
+
+    if (gap > 0) switch attachment {
+      case { v: Top, h: _ }:
+        top = top - gap;
+      case { v: Bottom, h: _ }:
+        top = top + gap;
+      case { v: Middle, h: Middle }:
+        left + gap;
+      default:
     }
   
     el.style.top = '${top}px';

@@ -4,6 +4,7 @@ import pine.*;
 
 class Popover extends AutoComponent {
   final child:Child;
+  final gap:Int = 0;
   final attachment:PositionedAttachment;
   final getTarget:Null<()->Dynamic> = null;
 
@@ -13,6 +14,7 @@ class Popover extends AutoComponent {
       getTarget: getTarget ?? () -> findAncestorOfType(ObjectComponent)
         .map(parent -> parent.getObject())
         .orThrow('No parent object'),
+      gap: gap,
       attachment: attachment,
       child: child
     }));

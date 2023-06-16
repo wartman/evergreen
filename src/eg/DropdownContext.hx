@@ -15,6 +15,7 @@ class DropdownContext extends Record {
   }
 
   public final attachment:PositionedAttachment;
+  public final gap:Int;
   @:signal public final status:DropdownStatus;
 
   public function open() {

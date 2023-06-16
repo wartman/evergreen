@@ -14,6 +14,7 @@ class DropdownExample extends AutoComponent {
     return new Html<'div'>({
       children: [
         new Dropdown({
+          gap: 10,
           toggle: dropdown -> new Button({
             action: e -> {
               e.preventDefault();

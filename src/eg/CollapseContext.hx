@@ -10,11 +10,15 @@ enum abstract CollapseContextStatus(Bool) {
 }
 
 class CollapseContext extends Record {
-  public static function from(context:Component) {
+  public inline static function from(context:Component) {
     return switch CollapseContextProvider.maybeFrom(context) {
       case Some(collapse): collapse;
       case None: throw 'No collapse context was found';
     }
+  }
+
+  public inline static function maybeFrom(context:Component) {
+    return CollapseContextProvider.maybeFrom(context);
   }
 
   public final duration:Int = 200;
